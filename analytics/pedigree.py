@@ -29,15 +29,18 @@ def add_genotype_to_pedigree(entry):
     value = (entry[1], entry[2], entry[3])
     pedigree[key] = value
 
+def find_ancestor( 
+
 def get_lineage_of_genotype(genotype_id, lineage=[]):
-    if genotype_id == 1:
+    if genotype_id == '1':
         lineage.append("Origin Genotype")
     elif genotype_id not in pedigree:
-        print( "No such ID: {}".format(genotype_id))
-        exit()
+        raise Exception("No such ID: {}".format(genotype_id))
     else:
         parent_a_id, parent_b_id = get_parents(genotype_id)
         get_lineage_of_genotype(parent_a_id, lineage)
+        get_lineage_of_genotype(parent_b_id, lineage)
+        lineage.append(genotype_id)
         lineage.append(genotype_id)
     return lineage
 

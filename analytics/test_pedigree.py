@@ -21,7 +21,6 @@ class TestParsing(unittest.TestCase):
 
 class TestPedigree(unittest.TestCase):
 
-
     simple_genotypes = [(5, 'a', 4, 3),
                         (4, 'b', 3, 2),
                         (3, 'c', 2, 1),
@@ -36,14 +35,14 @@ class TestPedigree(unittest.TestCase):
                             2: ('d', 1, 1) }
         self.assertDictEqual(expected_pedigree, pedigree.pedigree)
 
-    def test_get_parents(self):
+    def test_get_parents_returns_correct_parents(self):
         self.assertTupleEqual(pedigree.get_parents(5), (4, 3))
         self.assertTupleEqual(pedigree.get_parents(2), (1, 1))
 
-    def test_get_lineage(self):
-        lineage = pedigree.get_lineage_of_genotype(5)
-        print(lineage)
-
+    def test_ID_not_in_pedigree_raises_exception(self):
+        number_not_in_pedigree = 10
+        self.assertRaises(Exception, pedigree.get_lineage_of_genotype,
+                number_not_in_pedigree)
 
 
 if __name__ == '__main__':
