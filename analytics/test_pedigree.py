@@ -40,20 +40,19 @@ class TestPedigree(unittest.TestCase):
         self.assertTupleEqual(pedigree.get_parents('2'), ('1', '1'))
 
     def test_search_for_ID_not_in_pedigree_raises_exception(self):
-        number_not_in_pedigree = 10
         self.assertRaises(Exception, pedigree.pedigree_breadth_first_search,
-                number_not_in_pedigree)
+                '5', '10')
 
     def test_bfs(self):
         result = pedigree.pedigree_breadth_first_search('5', '2')
         self.assertTupleEqual(result, ('2', 2))
 
-class TestSampleData(unittest.TestCase):
+#class TestSampleData(unittest.TestCase):
 
-    def test_find_levels(self):
-        pedigree.create_pedigree_from_detail_file('detail-250000.spop')
-        print(pedigree.pedigree_breadth_first_search('79003567', '1'))
-        self.assertTrue(True)
+    #def test_find_levels(self):
+        #pedigree.create_pedigree_from_detail_file('detail-250000.spop')
+        #print(pedigree.pedigree_breadth_first_search('79003567', '2'))
+        #self.assertTrue(True)
 
 
 

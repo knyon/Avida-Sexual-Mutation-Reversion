@@ -49,15 +49,17 @@ def pedigree_breadth_first_search(start_genotype_id, target_id):
     while bfs_queue:
         node = bfs_queue.popleft()
         if node_marks_last_in_level(node): 
+            if len(bfs_queue) == 0:
+                break
             tree_level += 1
             bfs_queue.append(node)
         elif node == target_id:
             return (node, tree_level)
-        elif node_was_visited[node] or node_was_genesis(node):
+        elif node_was_genesis(node) or node_was_visited[node]:
             continue
         else:
             bfs_queue.append(*get_parents(node))
-            node_was_visited[node] = 1
+            node_was_visited[node] = True
     raise Exception("No such genotype ID")
 
 def make_map_for_visited_nodes():
