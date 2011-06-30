@@ -16,6 +16,7 @@ class pedigree_queue(deque):
         for i in items:
             super(pedigree_queue, self).append(i)
 
+
 def create_pedigree_from_detail_file(file_name):
     for line in open(file_name):
         entry = parse_detail_line(line) 
@@ -46,15 +47,14 @@ def pedigree_breadth_first_search(start_genotype_id, target_id):
     tree_level = 0
 
     while bfs_queue:
-        print(bfs_queue)
         node = bfs_queue.popleft()
         if node_marks_last_in_level(node): 
             tree_level += 1
             bfs_queue.append(node)
-        elif node_was_visited[node] or node_was_genesis(node):
-            continue
         elif node == target_id:
             return (node, tree_level)
+        elif node_was_visited[node] or node_was_genesis(node):
+            continue
         else:
             bfs_queue.append(*get_parents(node))
             node_was_visited[node] = 1

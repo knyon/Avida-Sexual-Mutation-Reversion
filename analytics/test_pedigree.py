@@ -48,6 +48,13 @@ class TestPedigree(unittest.TestCase):
         result = pedigree.pedigree_breadth_first_search('5', '2')
         self.assertTupleEqual(result, ('2', 2))
 
+class TestSampleData(unittest.TestCase):
+
+    def test_find_levels(self):
+        pedigree.create_pedigree_from_detail_file('detail-250000.spop')
+        print(pedigree.pedigree_breadth_first_search('79003567', '1'))
+        self.assertTrue(True)
+
 
 
 if __name__ == '__main__':
