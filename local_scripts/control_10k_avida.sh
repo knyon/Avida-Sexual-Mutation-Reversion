@@ -9,8 +9,8 @@ CFGDIR=$PROJDIR/custom_cfgs
 WDIR=$PROJDIR/working
 RDIR=$PROJDIR/results
 
-cp $AVIDADIR/avida $AVIDADIR/default-heads-sex.org $AVIDADIR/environment.cfg $AVIDADIR/instset-heads-sex.cfg $WDIR
-cp $CFGDIR/avida.cfg $WDIR
+cp $AVIDADIR/avida $AVIDADIR/environment.cfg $AVIDADIR/instset-heads-sex.cfg $WDIR
+cp $CFGDIR/avida.cfg $CFGDIR/default-heads-sex.org $WDIR
 cp $CFGDIR/local_run_events.cfg $WDIR/events.cfg
 
 cd $WDIR
@@ -22,3 +22,4 @@ mkdir -p $SAVEDIR
 cp $WDIR/data/* $SAVEDIR/
 
 rm -Rf $WDIR/*
+growlnotify -m "Control run has finished."

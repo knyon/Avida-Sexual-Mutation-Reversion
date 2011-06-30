@@ -1,0 +1,50 @@
+import unittest
+import pedigree
+
+
+class TestParsing(unittest.TestCase):
+
+    def test_correctly_parses_detail_line(self):
+        detail_line = ("4775600 org:divide (none) 4765250,4772979 1 2 50 96 336 "+
+                "0.285714 2244 9956 -1 291 0 heads_sex " +
+                "wrjagcjzptoyvvvbbaynuycduccuqvryptvnbrytylbfcaxgab 9956 159 0")
+        result = pedigree.parse_detail_line(detail_line)
+        
+        expected_result = ('4775600', 'wrjagcjzptoyvvvbbaynuycduccuqvryptvnbrytylbfcaxgab', 
+                        '4765250', '4772979')
+        self.assertTupleEqual(result, expected_result)
+
+    def test_returns_nothing_for_incorrect_detail(self):
+        detail_line = "123123 2312321 123123"
+        result = pedigree.parse_detail_line(detail_line)
+        self.assertFalse(result)
+
+class TestPedigree(unittest.TestCase):
+
+
+    simple_genotypes = [(5, 'a', 4, 3),
+                        (4, 'b', 3, 2),
+                        (3, 'c', 2, 1),
+                        (2, 'd', 1, 1)]
+    for node in simple_genotypes:
+        pedigree.add_genotype_to_pedigree(node)
+
+    def test_simple_pedigree_construction(self):
+        expected_pedigree = { 5: ('a', 4, 3),
+                            4: ('b', 3, 2),
+                            3: ('c', 2, 1),
+                            2: ('d', 1, 1) }
+        self.assertDictEqual(expected_pedigree, pedigree.pedigree)
+
+    def test_get_parents(self):
+        self.assertTupleEqual(pedigree.get_parents(5), (4, 3))
+        self.assertTupleEqual(pedigree.get_parents(2), (1, 1))
+
+    def test_get_lineage(self):
+        lineage = pedigree.get_lineage_of_genotype(5)
+        print(lineage)
+
+
+
+if __name__ == '__main__':
+    unittest.main()
