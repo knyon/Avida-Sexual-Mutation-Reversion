@@ -19,4 +19,8 @@ class Mutation():
 
 
 class MutationVerifier():
-    pass
+     
+    @staticmethod
+    def verify_mutation(genotype, parentA_genotype, parentB_genotype):
+        pass
+
