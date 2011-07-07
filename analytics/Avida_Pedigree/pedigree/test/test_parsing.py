@@ -1,36 +1,44 @@
 import unittest
-from pedigree.parsing import *
+import os, os.path
+from pedigree.parsing import PedigreeParser
+
 
 class Test_Parsing_Detail_Line(unittest.TestCase):
 
-    def test_correctly_parses_detail_line(self):
-        detail_line = ("4775600 org:divide (none) 4765250,4772979 1 2 50 96 336 "+
-                "0.285714 2244 9956 -1 291 0 heads_sex " +
-                "wrjagcjzptoyvvvbbaynuycduccuqvryptvnbrytylbfcaxgab 9956 159 0")
-        result = parse_detail_line(detail_line)
-        
-        expected_result = ('4775600', 'wrjagcjzptoyvvvbbaynuycduccuqvryptvnbrytylbfcaxgab', 
-                        '4765250', '4772979')
+    def test_correctly_parses_detail_line_with_mutation(self):
+        sampleDetail = self.__get_sample_detail("sample_detail_mutation.txt")
+        result = PedigreeParser.parse_detail_line(sampleDetail)
+        expected_result = ('6164236','6152360', '6155638', 'Mv42k',
+                'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+
+        self.assertTupleEqual(result, expected_result)
+
+    def test_correctly_parses_detail_line_without_mutation(self):
+        sampleDetail = self.__get_sample_detail("sample_detail_no_mutation.txt")
+        result = PedigreeParser.parse_detail_line(sampleDetail)
+        expected_result = ('6164236','6152360', '6155638', '  ',
+                'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+
         self.assertTupleEqual(result, expected_result)
 
     def test_returns_nothing_for_incorrect_detail(self):
         detail_line = "123123 2312321 123123"
-        result = parse_detail_line(detail_line)
+        result = PedigreeParser.parse_detail_line(detail_line)
         self.assertFalse(result)
 
-class Test_Creating_Pedigree(unittest.TestCase):
+    def __get_sample_detail(self, sampleDetailFileName):
+        sampleDetailPath = sampleDetailFileName
+        for root, dirs, names in os.walk(os.getcwd()):
+            if sampleDetailFileName in names:
+                sampleDetailPath = os.path.join(root, sampleDetailFileName)
+                
+        with open(sampleDetailPath) as f:
+            sampleDetail = f.readline()
+        return sampleDetail
 
-    simple_genotypes = [('5', 'a', '4', '3'),
-                        ('4', 'b', '3', '2'),
-                        ('3', 'c', '2', '1'),
-                        ('2', 'd', '1', '1')]
-    for node in simple_genotypes:
-        add_genotype_to_pedigree(node)
+class Test_Creating_Pedigree_from_file(unittest.TestCase):
 
-    def test_simple_pedigree_construction(self):
-        expected_pedigree = { '5': ('a', '4', '3'),
-                            '4': ('b', '3', '2'),
-                            '3': ('c', '2', '1'),
-                            '2': ('d', '1', '1') }
-        print(get_pedigree())
-        self.assertDictEqual(expected_pedigree, get_pedigree())
+    def test_pedigree_loaded_correctly(self):
+        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+        self.assertEquals(somePParser.pedigree['5'].parentA_ID, '4')
+        self.assertEquals(somePParser.pedigree['2'].parentB_ID, '1')

@@ -5,7 +5,8 @@ class Mutation():
 
     def __init__(self, mutationCode):
         self.mutationCode = mutationCode
-        self.parse_mutation_code(mutationCode)
+        if mutationCode != '  ':
+            self.parse_mutation_code(mutationCode)
 
     def parse_mutation_code(self, mutationCode):
         regex = re.compile(r'M(\w)(\d+)(\w)')
