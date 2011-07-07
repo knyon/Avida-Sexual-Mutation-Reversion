@@ -5,14 +5,8 @@ from pedigree.bfsearch import *
 class Test_Breadth_First_Search(unittest.TestCase):
 
     def setUp(self):
-        simple_genotypes = [('5', 'a', '4', '3'),
-                            ('4', 'b', '3', '2'),
-                            ('3', 'c', '2', '1'),
-                            ('2', 'd', '1', '1')]
-        for node in simple_genotypes:
-            add_genotype_to_pedigree(node)
-        pedigree = get_pedigree()
-        self.someBFSearcher = BFSearcher(pedigree)
+        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+        self.someBFSearcher = BFSearcher(somePParser.pedigree)
     
 
     def test_get_parents_returns_correct_parents(self):
