@@ -13,7 +13,7 @@ class Genotype():
         self.children = []
 
     def get_parents_as_tuple(self):
-        return (self.parentA_ID, self.parenta_ID)
+        return (self.parentA_ID, self.parentB_ID)
 
     def has_child(self, child_id):
         return child_id in self.children

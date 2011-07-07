@@ -4,8 +4,10 @@ import re
 class Mutation():
 
     def __init__(self, mutationCode):
-        self.mutationCode = mutationCode
-        if mutationCode != '  ':
+        if mutationCode == '  ':
+            self.mutationCode = None
+        else:
+            self.mutationCode = mutationCode
             self.parse_mutation_code(mutationCode)
 
     def parse_mutation_code(self, mutationCode):

@@ -33,8 +33,8 @@ class BFSearcher():
         return visited_nodes_map
 
     def get_parents(self, genotype_id):
-        listing = self.pedigree[genotype_id]
-        return (listing[1], listing[2])
+        genotype = self.pedigree[genotype_id]
+        return genotype.get_parents_as_tuple()
 
     @staticmethod
     def node_marks_last_in_level(node):
