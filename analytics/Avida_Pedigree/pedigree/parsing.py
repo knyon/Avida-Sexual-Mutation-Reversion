@@ -9,7 +9,10 @@ class PedigreeParser():
 
     def create_pedigree_from_detail_file(self, fileName):
         for line in open(fileName):
-            details = self.parse_detail_line(line) 
+            if line[:2] == '1 ':
+                details = self.parse_genesis_detail_line(line)
+            else:
+                details = self.parse_detail_line(line) 
             if details:
                 self.add_genotype_to_pedigree(details)
 
@@ -35,3 +38,13 @@ class PedigreeParser():
         else:
             return None
 
+    @staticmethod
+    def parse_genesis_detail_line(line):
+        regex = re.compile(r'''
+        .*heads_sex\s      # Junk, but marks before the next part
+        ([a-z]+)           # The genome sequence''', re.VERBOSE)
+
+        matchedDetails = regex.search(line)
+        sequence = matchedDetails.group(1)
+        mutation = '  '  # no mutation
+        return ('1', None, None, '  ', sequence)

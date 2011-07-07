@@ -2,7 +2,7 @@ import unittest
 from pedigree.parsing import *
 from pedigree.bfsearch import *
 
-class Test_Breadth_First_Search(unittest.TestCase):
+class Test_BFSearcher(unittest.TestCase):
 
     def setUp(self):
         somePParser = PedigreeParser("test/simple_detail_dump.spop")
@@ -15,8 +15,21 @@ class Test_Breadth_First_Search(unittest.TestCase):
 
     def test_search_for_ID_not_in_pedigree_raises_exception(self):
         self.assertRaises(Exception, 
-                self.someBFSearcher.pedigree_breadth_first_search, '5', '10')
+                self.someBFSearcher.search_pedigree, '5', '10')
 
     def test_correctly_finds_parent_in_pedigree(self):
-        result = self.someBFSearcher.pedigree_breadth_first_search('5', '2')
+        result = self.someBFSearcher.search_pedigree('5', '2')
         self.assertTupleEqual(result, ('2', 2))
+
+class Test_BFTraverser(unittest.TestCase):
+
+    def setUp(self):
+        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+        self.someTranverser = BFTraverser(somePParser.pedigree)
+        self.someTranverser.add_children_to_genotypes('5')
+    
+    def test_children_are_correct(self):
+        pedigree = self.someTranverser.pedigree
+        children = pedigree['2'].children
+        self.assertIn('3', children)
+        self.assertIn('4', children)

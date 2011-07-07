@@ -15,5 +15,8 @@ class Genotype():
     def get_parents_as_tuple(self):
         return (self.parentA_ID, self.parentB_ID)
 
+    def add_child(self, child_ID):
+        self.children.append(child_ID)
+
     def has_child(self, child_id):
         return child_id in self.children

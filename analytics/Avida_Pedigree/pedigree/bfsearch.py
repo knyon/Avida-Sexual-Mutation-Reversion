@@ -1,46 +1,77 @@
 from pedigree.pqueue import PedigreeQueue
 
-class BFSearcher():
-
+class BreadthFirst():
     def __init__(self, pedigree):
         self.pedigree = pedigree
 
-    def pedigree_breadth_first_search(self, start_genotype_id, target_id):
-        bfs_queue = PedigreeQueue(start_genotype_id, None)
-        node_was_visited = self.make_map_for_visited_nodes()
-        tree_level = 0
-
-        while bfs_queue:
-            node = bfs_queue.popleft()
-            if self.node_marks_last_in_level(node): 
-                if len(bfs_queue) == 0:
-                    break
-                tree_level += 1
-                bfs_queue.append(node)
-            elif node == target_id:
-                return (node, tree_level)
-            elif self.node_was_genesis(node) or node_was_visited[node]:
-                continue
-            else:
-                bfs_queue.append(*self.get_parents(node))
-                node_was_visited[node] = True
-        raise Exception("No such genotype ID")
-
-    def make_map_for_visited_nodes(self):
-        visited_nodes_map = {}
-        for k in self.pedigree.keys():
-            visited_nodes_map[k] = False
-        return visited_nodes_map
 
     def get_parents(self, genotype_id):
         genotype = self.pedigree[genotype_id]
         return genotype.get_parents_as_tuple()
 
+    def _make_map_for_visited_nodes(self):
+        visited_nodes_map = {}
+        for k in self.pedigree.keys():
+            visited_nodes_map[k] = False
+        return visited_nodes_map
+
     @staticmethod
-    def node_marks_last_in_level(node):
+    def _node_marks_last_in_level(node):
         return node is None
 
     @staticmethod
-    def node_was_genesis(node):
+    def _node_was_genesis(node):
         genesis_id = '1'
         return node == genesis_id
+
+
+class BFSearcher(BreadthFirst):
+
+    def search_pedigree(self, start_genotype_id, target_id):
+        bf_queue = PedigreeQueue(start_genotype_id, None)
+        node_was_visited = self._make_map_for_visited_nodes()
+        tree_level = 0
+
+        while bf_queue:
+            node = bf_queue.popleft()
+            if self._node_marks_last_in_level(node): 
+                if len(bf_queue) == 0:
+                    break
+                tree_level += 1
+                bf_queue.append(node)
+            elif node == target_id:
+                return (node, tree_level)
+            elif self._node_was_genesis(node) or node_was_visited[node]:
+                continue
+            else:
+                bf_queue.append(*self.get_parents(node))
+                node_was_visited[node] = True
+        raise Exception("No such genotype ID")
+
+class BFTraverser(BreadthFirst):
+
+    def add_children_to_genotypes(self, start_genotype_id):
+        bf_queue = PedigreeQueue(start_genotype_id, None)
+        node_was_visited = self._make_map_for_visited_nodes()
+        tree_level = 0
+
+        while bf_queue:
+            node = bf_queue.popleft()
+            if self._node_marks_last_in_level(node): 
+                if len(bf_queue) == 0:
+                    break
+                tree_level += 1
+                bf_queue.append(node)
+            elif self._node_was_genesis(node) or node_was_visited[node]:
+                continue
+            else:
+                parentIDs = self.get_parents(node)
+                self.add_child_to_parents(node, parentIDs)
+                bf_queue.append(*parentIDs)
+                node_was_visited[node] = True
+
+    def add_child_to_parents(self, node, parentIDs):
+        for parentID in parentIDs:
+            parentGenotype = self.pedigree[parentID]
+            if not parentGenotype.has_child(node):
+                parentGenotype.add_child(node)
