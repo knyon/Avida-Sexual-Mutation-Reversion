@@ -5,9 +5,9 @@ class PedigreeQueue(deque):
     appending multiple items at once'''
 
     def __init__(self, *items):
-        super(pedigree_queue, self).__init__(self)
+        super(PedigreeQueue, self).__init__(self)
         self.append(*items)
 
     def append(self, *items):
         for i in items:
-            super(pedigree_queue, self).append(i)
+            super(PedigreeQueue, self).append(i)
