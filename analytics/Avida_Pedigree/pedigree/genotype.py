@@ -1,11 +1,19 @@
+from pedigree.mutation import Mutation
 
 class Genotype():
+    '''Genotype object. Stores all information relating to a genotype.
+    Used in tree transversal'''
 
-    def __init__(self, id, parent_a_id, parent_b_id, sequence, mutation):
-        self.id = id
-        self.parent_a_id = parent_a_id
-        self.parent_b_id = parent_b_id
+    def __init__(self, genotypeID, parentA_ID, parentB_ID, sequence, mutationCode):
+        self.genotypeID = genotypeID
+        self.parentA_ID = parentA_ID
+        self.parentB_ID  = parentB_ID
         self.sequence = sequence
-        self.mutation = mutation
+        self.mutation = Mutation(mutationCode)
+        self.children = []
 
+    def get_parents_as_tuple(self):
+        return (self.parentA_ID, self.parenta_ID)
 
+    def has_child(self, child_id):
+        return child_id in self.children

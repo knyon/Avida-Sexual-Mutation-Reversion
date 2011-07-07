@@ -1,9 +1,15 @@
 from pedigree.genotype import Genotype
+from pedigree.genotype import Mutation
 import unittest
 
 
 class Test_Genotype(unittest.TestCase):
 
-    def test_retrieve_a_detail(self):
+    def test_retrieve_details_from_genotype(self):
         someGenotype = Genotype('3', '1', '2', 'asdf', 'Ma3q')
-        self.assertEquals(someGenotype.parent_a_id, '1')
+        self.assertEquals(someGenotype.genotypeID, '3')
+        self.assertEquals(someGenotype.parentA_ID, '1')
+        self.assertEquals(someGenotype.parentB_ID, '2')
+        self.assertEquals(someGenotype.sequence, 'asdf')
+        self.assertEquals(someGenotype.mutation.mutationCode, 'Ma3q')
+

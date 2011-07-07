@@ -1,9 +1,11 @@
-from pedigree.mutation import mutation
+from pedigree.mutation import Mutation
 import unittest
 
 
-class Test_Genotype(unittest.TestCase):
-
-    def test_retrieve_a_detail(self):
-        someGenotype = Genotype('3', '1', '2', 'asdf', 'Ma3q')
-        self.assertEquals(someGenotype.parent_a_id, '1')
+class Test_Mutation(unittest.TestCase):
+    
+    def test_mutation_code_parsing(self):
+        someMutation = Mutation('Ma3q')
+        self.assertEquals(someMutation.mutationFrom, 'a')
+        self.assertEquals(someMutation.mutationLocation, 3)
+        self.assertEquals(someMutation.mutationTo, 'q')
