@@ -3,20 +3,47 @@ import os, os.path
 from pedigree.parsing import PedigreeParser
 
 
+detailLineWithOneMutation = '''\
+6164236 org:divide (none) 6152360,6155638 1 1 50 0 0 0 \
+2503 9997 -1 434 Mv42k 0 heads_sex \
+wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab 9952 132 0'''
+
+detailLineWithNoMutations = '''\
+6164236 org:divide (none) 6152360,6155638 1 1 50 0 0 0 \
+2503 9997 -1 434  0 heads_sex \
+wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab 9952 132 0'''
+
+detailLineWithTwoMutations = '''\
+6164236 org:divide (none) 6152360,6155638 1 1 50 0 0 0 \
+2503 9997 -1 434 Mv42k,Ma1w 0 heads_sex \
+wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab 9952 132 0'''
+
+simpleDetailDump = '''\
+5 4,3 Md1e heads_sex e
+4 3,2 Mc1d heads_sex d
+3 2,1 Mb1c heads_sex c
+2 1,1 Ma1b heads_sex b
+1 (none)  heads_sex a'''
+
 class Test_Parsing_Detail_Line(unittest.TestCase):
 
-    def test_correctly_parses_detail_line_with_mutation(self):
-        sampleDetail = self.__get_sample_detail("sample_detail_mutation.txt")
-        result = PedigreeParser.parse_detail_line(sampleDetail)
-        expected_result = ('6164236','6152360', '6155638', 'Mv42k',
+    def test_correctly_parses_detail_line_with_one_mutation(self):
+        result = PedigreeParser.parse_detail_line(detailLineWithOneMutation)
+        expected_result = ('6164236','6152360', '6155638', 'Mv42k', None,
                 'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
 
         self.assertTupleEqual(result, expected_result)
 
-    def test_correctly_parses_detail_line_without_mutation(self):
-        sampleDetail = self.__get_sample_detail("sample_detail_no_mutation.txt")
-        result = PedigreeParser.parse_detail_line(sampleDetail)
-        expected_result = ('6164236','6152360', '6155638', '  ',
+    def test_correctly_parses_detail_line_with_no_mutations(self):
+        result = PedigreeParser.parse_detail_line(detailLineWithNoMutations)
+        expected_result = ('6164236','6152360', '6155638', None, None,
+                'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+
+        self.assertTupleEqual(result, expected_result)
+
+    def test_correctly_parses_detail_line_with_two_mutations(self):
+        result = PedigreeParser.parse_detail_line(detailLineWithTwoMutations)
+        expected_result = ('6164236','6152360', '6155638', 'Mv42k', 'Ma1w',
                 'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
 
         self.assertTupleEqual(result, expected_result)
@@ -24,21 +51,12 @@ class Test_Parsing_Detail_Line(unittest.TestCase):
     def test_returns_nothing_for_incorrect_detail(self):
         detail_line = "123123 2312321 123123"
         result = PedigreeParser.parse_detail_line(detail_line)
-        self.assertFalse(result)
+        self.assertIsNone(result)
 
-    def __get_sample_detail(self, sampleDetailFileName):
-        sampleDetailPath = sampleDetailFileName
-        for root, dirs, names in os.walk(os.getcwd()):
-            if sampleDetailFileName in names:
-                sampleDetailPath = os.path.join(root, sampleDetailFileName)
-                
-        with open(sampleDetailPath) as f:
-            sampleDetail = f.readline()
-        return sampleDetail
+class Test_Creating_Pedigree_from_String(unittest.TestCase):
 
-class Test_Creating_Pedigree_from_file(unittest.TestCase):
-
-    def test_pedigree_loaded_correctly(self):
-        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+    def test_pedigree_parsed_from_string(self):
+        somePParser = PedigreeParser()
+        somePParser.create_pedigree_from_string(simpleDetailDump)
         self.assertEquals(somePParser.pedigree['5'].parentA_ID, '4')
         self.assertEquals(somePParser.pedigree['2'].parentB_ID, '1')

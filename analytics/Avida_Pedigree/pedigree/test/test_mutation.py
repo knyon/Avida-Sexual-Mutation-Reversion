@@ -11,5 +11,5 @@ class Test_Mutation(unittest.TestCase):
         self.assertEquals(someMutation.mutationTo, 'q')
 
     def test_no_mutation(self):
-        noMutation = Mutation('  ')
-        self.assertFalse(noMutation.mutationCode)
+        noMutation = Mutation(None)
+        self.assertFalse(noMutation.is_defined())

@@ -2,10 +2,19 @@ import unittest
 from pedigree.parsing import *
 from pedigree.bfsearch import *
 
+
+simpleDetailDump = '''\
+5 4,3 Md1e heads_sex e
+4 3,2 Mc1d heads_sex d
+3 2,1 Mb1c heads_sex c
+2 1,1 Ma1b heads_sex b
+1 (none)  heads_sex a'''
+
 class Test_BFSearcher(unittest.TestCase):
 
     def setUp(self):
-        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+        somePParser = PedigreeParser()
+        somePParser.create_pedigree_from_string(simpleDetailDump)
         self.someBFSearcher = BFSearcher(somePParser.pedigree)
     
 
@@ -24,7 +33,8 @@ class Test_BFSearcher(unittest.TestCase):
 class Test_BFTraverser(unittest.TestCase):
 
     def setUp(self):
-        somePParser = PedigreeParser("test/simple_detail_dump.spop")
+        somePParser = PedigreeParser()
+        somePParser.create_pedigree_from_string(simpleDetailDump)
         self.someTranverser = BFTraverser(somePParser.pedigree)
         self.someTranverser.add_children_to_genotypes('5')
     
