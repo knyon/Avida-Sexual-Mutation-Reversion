@@ -1,10 +1,11 @@
 import re
 from pedigree.genotype import Genotype
+from pedigree.genealogy import Genealogy
 
 class PedigreeParser():
 
-    def __init__(self, fileName = ''):
-        self.pedigree = {}
+    def __init__(self, genealogy, fileName = ''):
+        self.genealogy = genealogy
         if fileName:
             self.create_pedigree_from_detail_file(fileName)
 
@@ -22,14 +23,7 @@ class PedigreeParser():
         else:
             details = self.parse_detail_line(line) 
         if details:
-            self.add_genotype_to_pedigree(details)
-
-
-    def add_genotype_to_pedigree(self, details):
-        print(details)
-        newGenotype = Genotype(*details)
-        key = newGenotype.genotypeID
-        self.pedigree[key] = newGenotype
+            self.genealogy.add_genotype(details)
 
     @staticmethod
     def parse_detail_line(line):

@@ -1,6 +1,7 @@
 import unittest
 import os, os.path
 from pedigree.parsing import PedigreeParser
+from pedigree.genealogy import Genealogy
 
 
 detailLineWithOneMutation = '''\
@@ -56,7 +57,8 @@ class Test_Parsing_Detail_Line(unittest.TestCase):
 class Test_Creating_Pedigree_from_String(unittest.TestCase):
 
     def test_pedigree_parsed_from_string(self):
-        somePParser = PedigreeParser()
+        someGenealogy = Genealogy()
+        somePParser = PedigreeParser(someGenealogy)
         somePParser.create_pedigree_from_string(simpleDetailDump)
-        self.assertEquals(somePParser.pedigree['5'].parentA_ID, '4')
-        self.assertEquals(somePParser.pedigree['2'].parentB_ID, '1')
+        self.assertTrue(someGenealogy.has_genotype_id('5'))
+        self.assertTrue(someGenealogy.has_genotype_id('1'))
