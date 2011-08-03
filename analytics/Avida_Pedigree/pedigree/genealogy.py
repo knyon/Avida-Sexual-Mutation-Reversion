@@ -57,7 +57,7 @@ class Genealogy():
                 continue
             else:
                 parentIDs = self.get_parents(node)
-                self.add_child_to_parents(node, parentIDs)
+                self._add_child_to_parents(node, parentIDs)
                 queue.append(*parentIDs)
                 node_was_visited[node] = True
 
@@ -75,7 +75,7 @@ class Genealogy():
             visited_nodes_map[k] = False
         return visited_nodes_map
 
-    def add_child_to_parents(self, node, parentIDs):
+    def _add_child_to_parents(self, node, parentIDs):
         for parentID in parentIDs:
             parentGenotype = self.genealogy[parentID]
             if not parentGenotype.has_child(node):

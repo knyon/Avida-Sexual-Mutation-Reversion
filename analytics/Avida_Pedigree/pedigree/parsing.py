@@ -33,6 +33,7 @@ class PedigreeParser():
         (\d*),(\d*)                    # Here are the two parent IDs
         [-\s\d]*                       # More junk
         (M\w\d+\w)?(?:,(M\w\d+\w))?    # One, two, or no mutation codes
+        .*(Swp\d+-\d+)
         .*heads_sex\s                  # Junk, but marks before the next part
         ([a-z]+)                       # The genome sequence''',
         re.VERBOSE)
@@ -51,4 +52,4 @@ class PedigreeParser():
 
         matchedDetails = regex.search(line)
         sequence = matchedDetails.group(1)
-        return ('1', None, None, None, None, sequence)
+        return ('1', None, None, None, None, None, sequence)

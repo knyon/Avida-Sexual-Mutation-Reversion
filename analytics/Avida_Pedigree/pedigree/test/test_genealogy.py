@@ -4,10 +4,10 @@ from pedigree.genealogy import *
 
 
 simpleDetailDump = '''\
-5 4,3 Md1e heads_sex e
-4 3,2 Mc1d heads_sex d
-3 2,1 Mb1c heads_sex c
-2 1,1 Ma1b heads_sex b
+5 4,3 Md1e Swp0-0 heads_sex e
+4 3,2 Mc1d Swp0-0 heads_sex d
+3 2,1 Mb1c Swp0-0 heads_sex c
+2 1,1 Ma1b Swp0-0 heads_sex b
 1 (none)  heads_sex a'''
 
 class Test_Genealogy(unittest.TestCase):
@@ -34,5 +34,5 @@ class Test_Genealogy(unittest.TestCase):
         self.assertIn('4', children)
 
     def test_add_genotype(self):
-        self.someGenealogy.add_genotype(('6', '5', '4', None, None, 'e'))
+        self.someGenealogy.add_genotype(('6', '5', '4', None, None, 'Swp0-0', 'e'))
         self.assertIsNotNone(self.someGenealogy.genealogy['6'])

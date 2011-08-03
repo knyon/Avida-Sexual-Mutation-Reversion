@@ -6,7 +6,7 @@ import unittest
 class Test_Genotype(unittest.TestCase):
 
     def test_retrieve_details_from_genotype(self):
-        someGenotype = Genotype('3', '1', '2', 'Ma3q', None, 'asdf',)
+        someGenotype = Genotype('3', '1', '2', 'Ma3q', None, 'Swp0-0', 'asdf',)
 
         self.assertEquals(someGenotype.genotypeID, '3')
         self.assertEquals(someGenotype.parentA_ID, '1')
@@ -14,19 +14,19 @@ class Test_Genotype(unittest.TestCase):
         self.assertEquals(someGenotype.sequence, 'asdf')
 
     def test_genotype_with_no_mutations(self):
-        someGenotype = Genotype('3', '1', '2', None, None, 'asdf',)
+        someGenotype = Genotype('3', '1', '2', None, None, 'Swp0-0', 'asdf',)
         self.assertEquals(someGenotype.mutationA.mutationCode, None)
         self.assertEquals(someGenotype.mutationB.mutationCode, None)
         self.assertEquals(someGenotype.number_of_mutations(), 0)
 
     def test_genotype_with_one_mutation(self):
-        someGenotype = Genotype('3', '1', '2', 'Ma3q', None, 'asdf',)
+        someGenotype = Genotype('3', '1', '2', 'Ma3q', None, 'Swp0-0', 'asdf',)
         self.assertEquals(someGenotype.mutationA.mutationCode, 'Ma3q')
         self.assertEquals(someGenotype.mutationB.mutationCode, None)
         self.assertEquals(someGenotype.number_of_mutations(), 1)
 
     def test_genotype_with_two_mutations(self):
-        someGenotype = Genotype('3', '1', '2', 'Ma3q', 'Mb2s', 'asdf',)
+        someGenotype = Genotype('3', '1', '2', 'Ma3q', 'Mb2s', 'Swp0-0', 'asdf',)
         self.assertEquals(someGenotype.mutationA.mutationCode, 'Ma3q')
         self.assertEquals(someGenotype.mutationB.mutationCode, 'Mb2s')
         self.assertEquals(someGenotype.number_of_mutations(), 2)
