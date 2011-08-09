@@ -34,6 +34,7 @@ class Genotype():
         else:
             return 0
 
+
 class SwapArea():
 
     def __init__(self, swapCode):
