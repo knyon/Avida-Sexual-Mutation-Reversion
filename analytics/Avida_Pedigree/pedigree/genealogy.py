@@ -10,15 +10,15 @@ def node_is_genesis(node):
     return node == GENESIS
 
 
-class ParamExpandDeque(deque):
+class ExtndDeque(deque):
     '''Extension of the deque collection that allows for appending multiple
     items at once'''
     def __init__(self, *items):
-        super(ParamExpandDeque, self).__init__(self)
+        super(ExtndDeque, self).__init__(self)
         self.append(*items)
     def append(self, *items):
         for i in items:
-            super(ParamExpandDeque, self).append(i)
+            super(ExtndDeque, self).append(i)
 
 
 class EndOfLevelMarker():
@@ -32,23 +32,32 @@ class EndOfLevelMarker():
 
 class GenealogyCreator:
 
-    def create_pedigree_from_detail_file(fileName):
-        genealogy = Genealogy()
-        for line in open(fileName):
-            details = DetailParser.process_line(line)
-            genealogy.add_genotype(*details)
-    
-    def create_pedigree_from_string(inputString):
-        genealogy = Genealogy()
-        for line in inputString.split('\n'):
-            details = DetailParser.process_line(line)
-            genealogy.add_genotype(*details)
-        add_childr
+    @staticmethod
+    def create_genealogy_from_detail_file(fileName):
+        detailDump = open(fileName)
+        build_genealogy(detailDump)
 
+    @staticmethod
+    def create_genealogy_from_string(inputString):
+        detailDump = inputString.split('\n')
+        return build_genealogy(detailDump)
+
+    @staticmethod
+    def build_genealogy(detailDump):
+        genealogy = Genealogy()
+        for line in detailDump:
+            newGenotype = new_genotype_from_detail_line(line)
+            genealogy.add_genotype(newGenotype)
+        return genealogy
+    
+    @staticmethod
+    def new_genotype_from_detail_line(line):
+            details = DetailParser.process_line(line)
+            return Genotype(*details)
 
     @staticmethod
     def add_children_to_lineage_of_genotype(self, start_genotype_id):
-        queue = ParamExpandDeque(start_genotype_id, EndOfLevelMarker())
+        queue = ExtndDeque(start_genotype_id, EndOfLevelMarker())
         node_was_visited = self._make_map_for_visited_nodes()
         tree_level = 0
 
@@ -91,8 +100,7 @@ class Genealogy():
     def has_genotype_id(self, genotypeID):
         return genotypeID in self.genealogy.keys()
 
-    def add_genotype(self, details):
-        newGenotype = Genotype(*details)
+    def add_genotype(self, newGenotype):
         key = newGenotype.genotypeID
         self.genealogy[key] = newGenotype
 
@@ -106,7 +114,7 @@ class Genealogy():
 
 
     #def print_out_mutations_from_top_to_bottom(self):
-        #queue = ParamExpandDeque(*genealogy[GENESIS].children)
+        #queue = ExtndDeque(*genealogy[GENESIS].children)
         #queue.append(EndOfLevelMarker())
         #node_was_visited = self._make_map_for_visited_nodes()
         #while queue:
