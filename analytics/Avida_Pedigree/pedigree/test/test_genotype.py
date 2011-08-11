@@ -8,9 +8,9 @@ class Test_Genotype(unittest.TestCase):
     def test_retrieve_details_from_genotype(self):
         someGenotype = Genotype('3', '1', '2', 'Ma3q', None, 'Swp0-0', 'asdf',)
 
-        self.assertEquals(someGenotype.genotypeID, '3')
-        self.assertEquals(someGenotype.parentA_ID, '1')
-        self.assertEquals(someGenotype.parentB_ID, '2')
+        self.assertEquals(someGenotype.ID, '3')
+        self.assertEquals(someGenotype.parents[0], '1')
+        self.assertEquals(someGenotype.parents[1], '2')
         self.assertEquals(someGenotype.sequence, 'asdf')
 
     def test_genotype_with_no_mutations(self):

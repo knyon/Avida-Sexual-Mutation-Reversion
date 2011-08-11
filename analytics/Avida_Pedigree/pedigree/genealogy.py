@@ -1,5 +1,6 @@
 from collections import deque
 from pedigree.genotype import Genotype
+from pedigree.parsing import DetailParser
 
 GENESIS = '1'
 
@@ -22,104 +23,87 @@ class ExtndDeque(deque):
 
 
 class EndOfLevelMarker():
-    '''EndOfLevelMarker is just a skeleton class to detect the end of a queue
+    '''EndOfLevelMarker is just a hollow class to detect the end of a queue
     in a breadth-first search. This is more clear than just using 'None' or
     some other indicator.'''
     pass
 
 
-################################################################################
-
-class GenealogyCreator:
+class GenealogyMaker:
 
     @staticmethod
-    def create_genealogy_from_detail_file(fileName):
+    def make_genealogy_from_file(fileName):
         detailDump = open(fileName)
-        build_genealogy(detailDump)
+        return GenealogyMaker.build_genealogy(detailDump)
 
     @staticmethod
-    def create_genealogy_from_string(inputString):
+    def make_genealogy_from_string(inputString):
         detailDump = inputString.split('\n')
-        return build_genealogy(detailDump)
+        return GenealogyMaker.build_genealogy(detailDump)
 
     @staticmethod
     def build_genealogy(detailDump):
         genealogy = Genealogy()
         for line in detailDump:
-            newGenotype = new_genotype_from_detail_line(line)
-            genealogy.add_genotype(newGenotype)
+            newGenotype = GenealogyMaker.new_genotype_from_detail_line(line)
+            if newGenotype:
+                genealogy.add_genotype(newGenotype)
+        genealogy.add_children_to_all_genotypes()
         return genealogy
     
     @staticmethod
     def new_genotype_from_detail_line(line):
             details = DetailParser.process_line(line)
-            return Genotype(*details)
-
-    @staticmethod
-    def add_children_to_lineage_of_genotype(self, start_genotype_id):
-        queue = ExtndDeque(start_genotype_id, EndOfLevelMarker())
-        node_was_visited = self._make_map_for_visited_nodes()
-        tree_level = 0
-
-        while queue:
-            node = queue.popleft()
-            if node_marks_last_in_level(node): 
-                if len(queue) == 0:
-                    break
-                tree_level += 1
-                queue.append(node)
-            elif node_is_genesis(node) or node_was_visited[node]:
-                continue
+            if details:
+                return Genotype(*details)
             else:
-                parentIDs = self.get_parents(node)
-                self._add_child_to_parents(node, parentIDs)
-                queue.append(*parentIDs)
-                node_was_visited[node] = True
+                return None
 
-    @staticmethod
-    def _make_map_for_visited_nodes(genealogy):
-        visited_nodes_map = {}
-        for k in genealogy.keys():
-            visited_nodes_map[k] = False
-        return visited_nodes_map
+    #def add_children_to_lineage_of_genotype(self, genealogy, start_genotype_id):
+        #queue = ExtndDeque(start_genotype_id, EndOfLevelMarker())
+        #node_was_visited = self._make_map_for_visited_nodes(genealogy)
 
-    def _add_child_to_parents(self, node, parentIDs):
-        for parentID in parentIDs:
-            parentGenotype = self.genealogy[parentID]
-            if not parentGenotype.has_child(node):
-                parentGenotype.add_child(node)
+        #while queue:
+            #node = queue.popleft()
+            #if node_marks_last_in_level(node): 
+                #if len(queue) == 0:
+                    #break
+                #tree_level += 1
+                #queue.append(node)
+            #elif node_is_genesis(node) or node_was_visited[node]:
+                #continue
+            #else:
+                #parentIDs = self.genealogy.genotypes[node].get_parents_as_tuple()
+                #self._add_child_to_parents(node, parentIDs)
+                #queue.append(*parentIDs)
+                #node_was_visited[node] = True
 
-################################################################################
+    #def _make_map_for_visited_nodes(self, genealogy):
+        #visited_nodes_map = {}
+        #for k in genealogy.keys():
+            #visited_nodes_map[k] = False
+        #return visited_nodes_map
 
+    #def _add_child_to_parents(self, node, parentIDs):
+        #for parentID in parentIDs:
+            #parentGenotype = self.genealogy[parentID]
+            #if not parentGenotype.has_child(node):
+                #parentGenotype.add_child(node)
 
 class Genealogy():
 
     def __init__(self):
-        self.genealogy = {}
+        self.genotypes = {}
+        self.children_mapping = {}
 
     def has_genotype_id(self, genotypeID):
-        return genotypeID in self.genealogy.keys()
+        return genotypeID in self.genotypes.keys()
 
     def add_genotype(self, newGenotype):
-        key = newGenotype.genotypeID
-        self.genealogy[key] = newGenotype
+        key = newGenotype.ID
+        self.genotypes[key] = newGenotype
 
-    def get_parents(self, genotype_id):
-        genotype = self.genealogy[genotype_id]
-        return genotype.get_parents_as_tuple()
-
-    def get_children(self, genotype_id):
-        genotype = self.genealogy[genotype_id]
-        return genotype.children
-
-
-    #def print_out_mutations_from_top_to_bottom(self):
-        #queue = ExtndDeque(*genealogy[GENESIS].children)
-        #queue.append(EndOfLevelMarker())
-        #node_was_visited = self._make_map_for_visited_nodes()
-        #while queue:
-            #node = queue.popleft()
-            #if node.children and node.number_of_mutations > 0:
-                #childrenStack append(*node.children)
-                #for mutation in node.mutations:
-
+    def add_children_to_all_genotypes(self):
+        for genotype in self.genotypes.values():
+            for parent in genotype.parents:
+                self.genotypes[parent].add_child(genotype)

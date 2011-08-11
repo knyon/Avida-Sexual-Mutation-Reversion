@@ -1,30 +1,32 @@
 from pedigree.mutation import Mutation
 import re
 
+GENESIS = '1'
+
 class Genotype():
     '''Genotype object. Stores all information relating to a genotype.
     Used in tree transversal'''
 
-    def __init__(self, genotypeID, parentA_ID, parentB_ID,
+    def __init__(self, ID, parentA_ID, parentB_ID,
             mutationCodeA, mutationCodeB, swapCode, sequence):
 
-        self.genotypeID = genotypeID
-        self.parentA_ID = parentA_ID
-        self.parentB_ID  = parentB_ID
+        self.ID = ID
+        self.parents = [parentA_ID, parentB_ID] if ID != GENESIS else []
         self.mutationA = Mutation(mutationCodeA)
         self.mutationB = Mutation(mutationCodeB)
         self.swapCode = SwapArea(swapCode)
         self.sequence = sequence
         self.children = []
 
-    def get_parents_as_tuple(self):
-        return (self.parentA_ID, self.parentB_ID)
+    def replace_parent_ids_with_objects(self, parentA, parentB):
+        self.parents = [parentA, parentB]
 
-    def add_child(self, child_ID):
-        self.children.append(child_ID)
+    def add_child(self, childID):
+        if childID not in self.children:
+            self.children.append(childID)
 
-    def has_child(self, child_id):
-        return child_id in self.children
+    def has_child(self, childID):
+        return childID in self.children
 
     def number_of_mutations(self):
         if self.mutationA.is_defined() and self.mutationB.is_defined():

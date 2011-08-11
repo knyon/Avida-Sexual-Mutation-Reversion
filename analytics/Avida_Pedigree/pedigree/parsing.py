@@ -1,6 +1,4 @@
 import re
-from pedigree.genotype import Genotype
-from pedigree.genealogy import Genealogy
 
 class DetailParser():
 

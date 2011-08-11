@@ -1,7 +1,8 @@
 import unittest
-from pedigree.parsing import *
 from pedigree.genealogy import *
+from pedigree.genotype import Genotype
 
+simpleDetailLine = "5 4,3 Md1e Swp0-0 heads_sex e"
 
 simpleDetailDump = '''\
 5 4,3 Md1e Swp0-0 heads_sex e
@@ -10,29 +11,38 @@ simpleDetailDump = '''\
 2 1,1 Ma1b Swp0-0 heads_sex b
 1 (none)  heads_sex a'''
 
+simpleDetailChild = ('2', '1', '1', None, None, 'Swp0-0', 'a')
+simpleDetailParent = ('1', None, None, None, None, None, 'a')
+
 class Test_Genealogy(unittest.TestCase):
 
     def setUp(self):
-        self.someGenealogy = Genealogy()
-        somePParser = PedigreeParser(self.someGenealogy)
-        somePParser.create_pedigree_from_string(simpleDetailDump)
-        self.someGenealogy.add_children_to_lineage_of_genotype('5')
+        self.genealogy = Genealogy()
+        self.childGenotype = Genotype(*simpleDetailChild)
+        self.parentGenotype = Genotype(*simpleDetailParent)
+        self.genealogy.add_genotype(self.childGenotype)
+        self.genealogy.add_genotype(self.parentGenotype)
 
-    def test_get_parents_returns_correct_parents(self):
-        self.assertTupleEqual(self.someGenealogy.get_parents('5'), ('4', '3'))
-        self.assertTupleEqual(self.someGenealogy.get_parents('2'), ('1', '1'))
 
-    def test_get_children_returns_correct_children(self):
-        children = self.someGenealogy.get_children('2')
-        self.assertIn('3', children)
-        self.assertIn('4', children)
+    def test_correctly_added_genotype(self):
+        self.assertTrue(self.genealogy.has_genotype_id('2'))
+        self.assertTrue(self.genealogy.has_genotype_id('1'))
 
-    def test_children_are_correctly_added_to_genealogy(self):
-        genealogy = self.someGenealogy.genealogy
-        children = genealogy['2'].children
-        self.assertIn('3', children)
-        self.assertIn('4', children)
+    def test_add_children_to_all_genotypes(self):
+        self.genealogy.add_children_to_all_genotypes()
+        children = self.parentGenotype.children
+        self.assertListEqual(children, [self.childGenotype])
 
-    def test_add_genotype(self):
-        self.someGenealogy.add_genotype(('6', '5', '4', None, None, 'Swp0-0', 'e'))
-        self.assertIsNotNone(self.someGenealogy.genealogy['6'])
+class Test_GenealogyMaker(unittest.TestCase):
+
+    def test_returns_new_genotype_from_line(self):
+        geno = GenealogyMaker.new_genotype_from_detail_line(simpleDetailLine)
+        self.assertIsInstance(geno, Genotype)
+
+    def test_should_make_new_genealogy_from_string(self):
+        genealogy = GenealogyMaker.make_genealogy_from_string(simpleDetailDump)
+        self.assertTrue(genealogy.has_genotype_id('5'))
+        self.assertTrue(genealogy.has_genotype_id('4'))
+        self.assertTrue(genealogy.has_genotype_id('3'))
+        self.assertTrue(genealogy.has_genotype_id('2'))
+        self.assertTrue(genealogy.has_genotype_id('1'))
