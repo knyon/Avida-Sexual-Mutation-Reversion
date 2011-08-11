@@ -18,8 +18,8 @@ class Genotype():
         self.sequence = sequence
         self.children = []
 
-    def replace_parent_ids_with_objects(self, parentA, parentB):
-        self.parents = [parentA, parentB]
+    def replace_parent_ids_with_objects(self, parentObjects):
+        self.parents = parentObjects
 
     def add_child(self, childID):
         if childID not in self.children:

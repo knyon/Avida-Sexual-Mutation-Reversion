@@ -28,10 +28,14 @@ class Test_Genealogy(unittest.TestCase):
         self.assertTrue(self.genealogy.has_genotype_id('2'))
         self.assertTrue(self.genealogy.has_genotype_id('1'))
 
-    def test_add_children_to_all_genotypes(self):
-        self.genealogy.add_children_to_all_genotypes()
+    def test_add_children_to_genotype(self):
+        self.genealogy.add_related_genotypes_to_all_genotypes()
         children = self.parentGenotype.children
         self.assertListEqual(children, [self.childGenotype])
+
+    def test_parent_id_swapped_with_object(self):
+        self.genealogy.add_parent_objects_to_genotype(self.childGenotype)
+        self.assertIsInstance(self.childGenotype.parents[0], Genotype)
 
 class Test_GenealogyMaker(unittest.TestCase):
 
