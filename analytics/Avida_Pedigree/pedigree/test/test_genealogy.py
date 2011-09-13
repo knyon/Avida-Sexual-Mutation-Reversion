@@ -39,12 +39,15 @@ class Test_Genealogy(unittest.TestCase):
 
 class Test_GenealogyMaker(unittest.TestCase):
 
+    def setUp(self):
+        self.genealogyMaker = GenealogyMaker()
+
     def test_returns_new_genotype_from_line(self):
-        geno = GenealogyMaker.new_genotype_from_detail_line(simpleDetailLine)
-        self.assertIsInstance(geno, Genotype)
+        newGenotype = self.genealogyMaker.new_genotype_from_detail_line(simpleDetailLine)
+        self.assertIsInstance(newGenotype, Genotype)
 
     def test_should_make_new_genealogy_from_string(self):
-        genealogy = GenealogyMaker.make_genealogy_from_string(simpleDetailDump)
+        genealogy = self.genealogyMaker.make_genealogy_from_string(simpleDetailDump)
         self.assertTrue(genealogy.has_genotype_id('5'))
         self.assertTrue(genealogy.has_genotype_id('4'))
         self.assertTrue(genealogy.has_genotype_id('3'))

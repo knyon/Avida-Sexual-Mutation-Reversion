@@ -17,34 +17,33 @@ class GenealogyMaker:
     detail dump. A detail dump may be either a detail dump file created by
     Avida or a string, which is useful in testing.'''
 
-    @staticmethod
-    def make_genealogy_from_file(fileName):
+    def __init__(self):
+        self.parser = DetailParser()
+
+    def make_genealogy_from_file(self, fileName):
         detailDump = open(fileName)
-        return GenealogyMaker.build_genealogy(detailDump)
+        return self.build_genealogy(detailDump)
 
-    @staticmethod
-    def make_genealogy_from_string(inputString):
+    def make_genealogy_from_string(self, inputString):
         detailDump = inputString.split('\n')
-        return GenealogyMaker.build_genealogy(detailDump)
+        return self.build_genealogy(detailDump)
 
-    @staticmethod
-    def build_genealogy(detailDump):
+    def build_genealogy(self, detailDump):
         '''Build and return a Genealogy object by adding Genotypes parsed from
         a detail dump'''
         genealogy = Genealogy()
         for line in detailDump:
-            newGenotype = GenealogyMaker.new_genotype_from_detail_line(line)
+            newGenotype = self.new_genotype_from_detail_line(line)
             if newGenotype:
                 genealogy.add_genotype(newGenotype)
         genealogy.add_related_genotypes_to_all_genotypes()
         return genealogy
     
-    @staticmethod
-    def new_genotype_from_detail_line(line):
+    def new_genotype_from_detail_line(self, line):
         '''Create a new Genotype object from a parsed line of a detail dump. If
         there's nothing returned from the parser (e.g., the DetailParser parses
         a commented line), return None'''
-        details = DetailParser.process_line(line)
+        details = self.parser.process_line(line)
         if details:
             return Genotype(*details)
         else:
