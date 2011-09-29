@@ -9,10 +9,11 @@ class DetailParser():
         (\d*),(\d*)                    # Here are the two parent IDs
         [-\s\d]*                       # More junk
         (M\w\d+\w)?(?:,(M\w\d+\w))?    # One, two, or no mutation codes
-        \s(Swp\d+-\d+)?                # The swap area
+        \,?(Swp\d+-\d+)?                 # The swap area
         .*heads_sex\s                  # Junk, but marks before the next part
         ([a-z]+)                       # The genome sequence''',
         re.VERBOSE)
+
         self.genesisRegex = re.compile(r'''
         .*heads_sex\s      # Junk, but marks before the next part
         ([a-z]+)           # The genome sequence''', re.VERBOSE)
@@ -27,6 +28,7 @@ class DetailParser():
     def parse_detail_line(self, line):
         matchedDetails = self.regex.match(line)
         if matchedDetails:
+            print(matchedDetails.groups())
             return matchedDetails.groups()
         else:
             return None

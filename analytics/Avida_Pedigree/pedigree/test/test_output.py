@@ -10,14 +10,14 @@ simpleDetailDump = '''\
 2 1,1 Ma1b Swp0-0 heads_sex b
 1 (none)  heads_sex a'''
 
-class Test_Genealogy(unittest.TestCase):
+#class Test_Genealogy(unittest.TestCase):
 
-    def test_print_genealogy(self):
-        genealogy = GenealogyMaker.make_genealogy_from_string(simpleDetailDump)
-        treePrinter = GraphvizFamilyTree()
-        treePrinter.write_genealogy_to_file(genealogy)
-        self.assertTrue(os.path.exists('genealogy.dot'))
+    #def test_print_genealogy(self):
+        #genealogy = GenealogyMaker.make_genealogy_from_string(simpleDetailDump)
+        #treePrinter = GraphvizFamilyTree()
+        #treePrinter.write_genealogy_to_file(genealogy)
+        #self.assertTrue(os.path.exists('genealogy.dot'))
 
-    def tearDown(self):
-        if os.path.exists('genealogy.dot'):
-            os.remove('genealogy.dot')
+    #def tearDown(self):
+        #if os.path.exists('genealogy.dot'):
+            #os.remove('genealogy.dot')
