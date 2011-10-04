@@ -4,14 +4,14 @@ class DetailParser():
 
     def __init__(self):
         self.regex = re.compile(r'''
-        ^(\d*)                         # The string of digits is the genotype ID
-        [\s\)\(:a-z]*                  # Skip the intervening sequence
-        (\d*),(\d*)                    # Here are the two parent IDs
-        [-\s\d]*                       # More junk
-        (M\w\d+\w)?(?:,(M\w\d+\w))?    # One, two, or no mutation codes
-        \,?(Swp\d+-\d+)?                 # The swap area
-        .*heads_sex\s                  # Junk, but marks before the next part
-        ([a-z]+)                       # The genome sequence''',
+        ^(\d*)                    # The string of digits is the genotype ID
+        .+?                       # Skip the intervening sequence
+        (\d*),(\d*)               # Here are the two parent IDs
+        .+?                       # More junk
+        (M\w\d+\w)?,?(M\w\d+\w)?  # One, two, or no mutation codes
+        ,?(Swp\d+-\d+)            # The swap area
+        .+heads_sex\s             # Junk, but marks before the next part
+        ([a-z]+)                  # The genome sequence''',
         re.VERBOSE)
 
         self.genesisRegex = re.compile(r'''

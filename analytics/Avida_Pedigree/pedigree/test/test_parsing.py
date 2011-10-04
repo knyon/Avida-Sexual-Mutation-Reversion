@@ -9,7 +9,7 @@ heads_sex wzcagcccccccccccccccccccccccccccccccccccczvfcaxgab'''
 
 detailLineWithNoMutations = '''\
 72 org:divide (none) 3,18 0 17 50 47 188 0.25 13 82 176 2 Swp14-26 0 heads_sex \
-wzcagcccccccccccccccccccbccccccmccccccccczvfcaxgab '''
+wzcagcccccccccccccccccccbccccccmccccccccczvfcaxgab'''
 
 detailLineWithOneMutation = '''\
 1055 org:divide (none) 781,781 0 1 50 47 187 0.251337 26 163 176 4 \
@@ -32,22 +32,22 @@ class Test_Parsing_Detail_Line(unittest.TestCase):
                 None, 'wzcagcccccccccccccccccccccccccccccccccccczvfcaxgab')
         self.assertTupleEqual(result, expected_result)
 
-    def test_correctly_parses_detail_line_with_two_mutations(self):
+    def test_correctly_parses_detail_line_with_no_mutations(self):
         result = self.parser.process_line(detailLineWithNoMutations)
-        expected_result = ('6164236','6152360', '6155638', None, None,
-                'Swp10-30', 'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+        expected_result = ('72','3', '18', None, None,
+                'Swp14-26', 'wzcagcccccccccccccccccccbccccccmccccccccczvfcaxgab')
         self.assertTupleEqual(result, expected_result)
 
     def test_correctly_parses_detail_line_with_one_mutation(self):
         result = self.parser.process_line(detailLineWithOneMutation)
-        expected_result = ('6164236','6152360', '6155638', 'Mv42k', None,
-                'Swp10-30', 'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+        expected_result = ('1055','781', '781', 'Mc13y', None,
+                'Swp25-38', 'wzcagccccccccyccccccccwcccccccccccrcccccczvfcaxgab')
         self.assertTupleEqual(result, expected_result)
 
     def test_correctly_parses_detail_line_with_two_mutations(self):
         result = self.parser.process_line(detailLineWithTwoMutations)
-        expected_result = ('6164236','6152360', '6155638', 'Mv42k', 'Ma1w',
-                'Swp10-30', 'wuujagcycucbvyyusjvvvmvvjyyuyuuyctcyycvuyzkfcaxgab')
+        expected_result = ('79496','30490', '57433', 'Mc15y', 'Mc40z',
+                'Swp9-16', 'wzcagccccccccccycpcccehccccckccccckpcccczzvfcaxgab')
         self.assertTupleEqual(result, expected_result)
 
     def test_returns_nothing_for_incorrect_detail(self):
