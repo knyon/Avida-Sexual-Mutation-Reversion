@@ -45,6 +45,7 @@ class GenealogyMaker:
         a commented line), return None'''
         details = self.parser.process_line(line)
         if details:
+            print(details)
             return Genotype(*details)
         else:
             return None

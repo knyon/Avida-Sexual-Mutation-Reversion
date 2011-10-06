@@ -2,17 +2,17 @@ import unittest
 from pedigree.genealogy import *
 from pedigree.genotype import Genotype
 
-simpleDetailLine = "5 4,3 Md1e Swp0-0 heads_sex e"
+simpleDetailLine = "5 4,3 Md1e,Swp0-0 heads_sex e"
 
 simpleDetailDump = '''\
-5 4,3 Md1e Swp0-0 heads_sex e
-4 3,2 Mc1d Swp0-0 heads_sex d
-3 2,1 Mb1c Swp0-0 heads_sex c
-2 1,1 Ma1b Swp0-0 heads_sex b
+5 4,3 Md1e,Swp0-0 heads_sex e
+4 3,2 Mc1d,Swp0-0 heads_sex d
+3 2,1 Mb1c,Swp0-0 heads_sex c
+2 1,1 Ma1b,Swp0-0 heads_sex b
 1 (none)  heads_sex a'''
 
 simpleDetailChild = ('2', '1', '1', None, None, 'Swp0-0', 'a')
-simpleDetailParent = ('1', None, None, None, None, None, 'a')
+simpleDetailParent = ('1', None, None, None, None, 'Swp0-0', 'a')
 
 class Test_Genealogy(unittest.TestCase):
 
