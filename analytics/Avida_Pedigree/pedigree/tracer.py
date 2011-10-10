@@ -19,6 +19,8 @@ class Tracer:
                 queue.append(child)
         return set(trace)
 
+
+#I really want to make this DRYer, not sure how :\
 class SubMutTracer(Tracer):
 
     def make_trace(self, startID):
