@@ -35,3 +35,7 @@ class Genotype():
             return 1
         else:
             return 0
+    
+    def sequence_contains_mutation(self, subMut):
+        if subMut.mutationAt > len(self.sequence): return False
+        return self.sequence[subMut.mutationAt] == subMut.mutationTo

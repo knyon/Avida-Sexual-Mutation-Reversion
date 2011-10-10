@@ -28,7 +28,6 @@ class DetailParser():
     def parse_detail_line(self, line):
         matchedDetails = self.regex.match(line)
         if matchedDetails:
-            print(matchedDetails.groups())
             return matchedDetails.groups()
         else:
             return None

@@ -1,37 +1,19 @@
+import os
 from pedigree.genealogy import *
 
 GENESIS = '1'
 
-class GraphvizFamilyTree:
+class GraphvizWriter:
 
-    def write_genealogy_to_file(self, genealogy, filename = "genealogy.dot"):
+    def write_trace_to_graphviz(self, trace, filename = "genealogy.dot"):
         fo = open(filename, 'w')
-        familyTree = self.make_family_tree(genealogy)
-        fo.write(self.family_tree_to_output_string(familyTree))
+        fo.write(self.build_graphviz(trace))
         fo.close()
 
-
-    def make_family_tree(self, genealogy):
-        genesisGenotype = genealogy.genotypes[GENESIS]
-        familyTree = set()
-        queue = ExtndDeque(genesisGenotype)
-        while queue:
-            genotype = queue.popleft()
-            children = genotype.children
-            if children:
-                familyTree = familyTree.union(self.make_relationship_set(genotype, children))
-                queue.append(*children)
-        return familyTree
-
-    def make_relationship_set(self, parent, children):
-        relationships = set()
-        for child in children:
-            relationship = "\t{0} -> {1};\n".format(parent.ID, child.ID)
-            relationships.add(relationship)
-        return relationships
-
-    def family_tree_to_output_string(self, familyTree):
+    def build_graphviz(self, trace):
         head = "digraph FamilyTree {\n"
-        body = ''.join(familyTree)
+        body = ''.join(
+                ["\t{0} -> {1};\n".format(parent, child)
+                for (parent,child) in trace])
         end = "}"
         return head + body + end

@@ -29,7 +29,7 @@ class Test_Genealogy(unittest.TestCase):
         self.assertTrue(self.genealogy.has_genotype_id('1'))
 
     def test_add_children_to_genotype(self):
-        self.genealogy.add_related_genotypes_to_all_genotypes()
+        self.genealogy.create_relations_between_genotypes()
         children = self.parentGenotype.children
         self.assertListEqual(children, [self.childGenotype])
 
