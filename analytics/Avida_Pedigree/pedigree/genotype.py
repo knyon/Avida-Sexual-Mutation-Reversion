@@ -11,7 +11,7 @@ class Genotype():
             mutationCodeA, mutationCodeB, swapCode, sequence):
 
         self.ID = ID
-        self.parents = [parentA_ID, parentB_ID] if ID != GENESIS else []
+        self.parents = [parentA_ID, parentB_ID]
         self.subMutA = SubstitutionMutation(mutationCodeA) if mutationCodeA else None
         self.subMutB = SubstitutionMutation(mutationCodeB) if mutationCodeB else None
         self.swapArea = SwapArea(swapCode)

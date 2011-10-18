@@ -6,9 +6,6 @@ class GenealogyMaker:
     detail dump. A detail dump may be either a detail dump file created by
     Avida or a string, which is useful in testing.'''
 
-    def __init__(self):
-        self.parser = DetailParser()
-
     def make_genealogy_from_file(self, fileName):
         detailDump = open(fileName)
         return self.build_genealogy(detailDump)
@@ -20,23 +17,14 @@ class GenealogyMaker:
     def build_genealogy(self, detailDump):
         '''Build and return a Genealogy object by adding Genotypes parsed from
         a detail dump'''
+        parser = DetailParser()
         genealogy = Genealogy()
         for line in detailDump:
-            newGenotype = self.new_genotype_from_detail_line(line)
-            if newGenotype:
-                genealogy.add_genotype(newGenotype)
+            details = parser.process_line(line)
+            if details:
+                genealogy.add_genotype(Genotype(*details))
         genealogy.create_relations_between_genotypes()
         return genealogy
-    
-    def new_genotype_from_detail_line(self, line):
-        '''Create a new Genotype object from a parsed line of a detail dump. If
-        there's nothing returned from the parser (e.g., the DetailParser parses
-        a commented line), return None'''
-        details = self.parser.process_line(line)
-        if details:
-            return Genotype(*details)
-        else:
-            return None
 
 
 class Genealogy():
@@ -44,7 +32,6 @@ class Genealogy():
 
     def __init__(self):
         self.genotypes = {}
-        self.children_mapping = {}
 
     def has_genotype_id(self, genotypeID):
         return genotypeID in self.genotypes.keys()
@@ -64,17 +51,15 @@ class Genealogy():
     def add_parent_objects_to_genotype(self, genotype):
         '''Genotype object initially created with just the parents' IDs.
         Replace them with the parents' Genotype objects'''
-        parentObjects = self.find_multiple_genotypes_by_id(genotype.parents)
-        genotype.replace_parent_ids_with_objects(parentObjects)
-
-    def find_multiple_genotypes_by_id(self, ids):
-        foundGenotypes = []
-        for i in ids:
-            foundGenotypes.append(self.genotypes[i])
-        return foundGenotypes
+        for idx,parentID in enumerate(genotype.parents):
+            if parentID and self.has_genotype_id(parentID):
+                genotype.parents[idx] = self.genotypes[parentID]
+            else:
+                genotype.parents[idx] = None
 
     def add_child_to_parent_genotype(self, genotype):
         '''Add the genotype to it's parent'''
         for parent in genotype.parents:
-            parent.add_child(genotype)
+            if parent:
+                parent.add_child(genotype)
 

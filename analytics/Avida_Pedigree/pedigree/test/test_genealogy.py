@@ -2,8 +2,21 @@ import unittest
 from pedigree.genealogy import *
 from pedigree.genotype import Genotype
 
-simpleDetailLine = "5 4,3 Md1e,Swp0-0 heads_sex e"
 
+simpleDetailChild = ('2', '1', '1', None, None, 'Swp0-0', 'a')
+simpleDetailParent = ('1', None, None, None, None, 'Swp0-0', 'a')
+
+class Test_Genealogy_adds_genotype(unittest.TestCase):
+
+    def setUp(self):
+        self.someGenotype = Genotype(*simpleDetailParent)
+        self.genealogy = Genealogy()
+        self.genealogy.add_genotype(self.someGenotype)
+
+    def test_genealogy_should_have_genotype_id(self):
+        self.assertTrue(self.genealogy.has_genotype_id(
+            self.someGenotype.ID))
+            
 simpleDetailDump = '''\
 5 4,3 Md1e,Swp0-0 heads_sex e
 4 3,2 Mc1d,Swp0-0 heads_sex d
@@ -11,45 +24,45 @@ simpleDetailDump = '''\
 2 1,1 Ma1b,Swp0-0 heads_sex b
 1 (none)  heads_sex a'''
 
-simpleDetailChild = ('2', '1', '1', None, None, 'Swp0-0', 'a')
-simpleDetailParent = ('1', None, None, None, None, 'Swp0-0', 'a')
-
-class Test_Genealogy(unittest.TestCase):
+class Test_GenealogyMaker_makes_genealogy_from_detail_dump(unittest.TestCase):
 
     def setUp(self):
-        self.genealogy = Genealogy()
-        self.childGenotype = Genotype(*simpleDetailChild)
-        self.parentGenotype = Genotype(*simpleDetailParent)
-        self.genealogy.add_genotype(self.childGenotype)
-        self.genealogy.add_genotype(self.parentGenotype)
+        self.genealogy = GenealogyMaker().make_genealogy_from_string(simpleDetailDump)
 
-
-    def test_correctly_added_genotype(self):
+    def test_should_make_new_genealogy_from_string(self):
+        self.assertTrue(self.genealogy.has_genotype_id('5'))
+        self.assertTrue(self.genealogy.has_genotype_id('4'))
+        self.assertTrue(self.genealogy.has_genotype_id('3'))
         self.assertTrue(self.genealogy.has_genotype_id('2'))
         self.assertTrue(self.genealogy.has_genotype_id('1'))
 
-    def test_add_children_to_genotype(self):
-        self.genealogy.create_relations_between_genotypes()
+class Test_Genealogy_creates_relationship_between_genotypes(unittest.TestCase):
+
+    def setUp(self):
+        self.parentGenotype = Genotype(*simpleDetailParent)
+        self.childGenotype = Genotype(*simpleDetailChild)
+        genealogy = Genealogy()
+        genealogy.add_genotype(self.parentGenotype)
+        genealogy.add_genotype(self.childGenotype)
+        genealogy.create_relations_between_genotypes()
+    
+    def test_parent_should_have_child_genotype(self):
         children = self.parentGenotype.children
         self.assertListEqual(children, [self.childGenotype])
 
     def test_parent_id_swapped_with_object(self):
-        self.genealogy.add_parent_objects_to_genotype(self.childGenotype)
         self.assertIsInstance(self.childGenotype.parents[0], Genotype)
 
-class Test_GenealogyMaker(unittest.TestCase):
+detailDumpWithMissingGenotypesEntry = '''4 3,2 Mc1d,Swp0-0 heads_sex d'''
+        
+class Test_Genealogy_handles_missing_parent_genotypes(unittest.TestCase):
 
     def setUp(self):
-        self.genealogyMaker = GenealogyMaker()
+        genealogy = GenealogyMaker()\
+                .make_genealogy_from_string(detailDumpWithMissingGenotypesEntry)
+        genealogy.create_relations_between_genotypes()
+        self.orphanGenotype = genealogy.genotypes['4']
 
-    def test_returns_new_genotype_from_line(self):
-        newGenotype = self.genealogyMaker.new_genotype_from_detail_line(simpleDetailLine)
-        self.assertIsInstance(newGenotype, Genotype)
-
-    def test_should_make_new_genealogy_from_string(self):
-        genealogy = self.genealogyMaker.make_genealogy_from_string(simpleDetailDump)
-        self.assertTrue(genealogy.has_genotype_id('5'))
-        self.assertTrue(genealogy.has_genotype_id('4'))
-        self.assertTrue(genealogy.has_genotype_id('3'))
-        self.assertTrue(genealogy.has_genotype_id('2'))
-        self.assertTrue(genealogy.has_genotype_id('1'))
+    def test_missing_parents_are_none(self):
+        for parent in self.orphanGenotype.parents:
+            self.assertIsNone(parent)
