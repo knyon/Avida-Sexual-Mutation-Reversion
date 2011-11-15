@@ -1,7 +1,6 @@
 from pedigree.mutation import *
 import re
 
-GENESIS = '1'
 
 class Genotype():
     '''Genotype object. Stores all information relating to a genotype.
@@ -12,8 +11,9 @@ class Genotype():
 
         self.ID = ID
         self.parents = [parentA_ID, parentB_ID]
-        self.subMutA = SubstitutionMutation(mutationCodeA) if mutationCodeA else None
-        self.subMutB = SubstitutionMutation(mutationCodeB) if mutationCodeB else None
+        self.mutations = []
+        self.mutations.append(SubstitutionMutation(mutationCodeA) if mutationCodeA else None)
+        self.mutations.append(SubstitutionMutation(mutationCodeB) if mutationCodeB else None)
         self.swapArea = SwapArea(swapCode)
         self.sequence = sequence
         self.children = []
@@ -29,13 +29,17 @@ class Genotype():
         return childID in self.children
 
     def num_sub_mutations(self):
-        if self.subMutA and self.subMutB:
-            return 2
-        elif self.subMutA:
-            return 1
-        else:
-            return 0
+        mutationCount = 0
+        for mutation in self.mutations:
+            if mutation:
+                mutationCount += 1
+        return mutationCount
     
     def sequence_contains_mutation(self, subMut):
         if subMut.mutationAt > len(self.sequence): return False
         return self.sequence[subMut.mutationAt] == subMut.mutationTo
+
+    def get_sequence_with_mutation_reverted(self, subMut):
+        revertedSequence = list(self.sequence)
+        revertedSequence[subMut.mutationAt] = subMut.mutationFrom
+        return ''.join(revertedSequence)

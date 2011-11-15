@@ -23,7 +23,8 @@ class GenealogyMaker:
             details = parser.process_line(line)
             if details:
                 genealogy.add_genotype(Genotype(*details))
-        genealogy.create_relations_between_genotypes()
+        GenotypeRelationshipTool().\
+            create_relationships_between_genotypes_in_genealogy(genealogy)
         return genealogy
 
 
@@ -41,19 +42,21 @@ class Genealogy():
         key = newGenotype.ID
         self.genotypes[key] = newGenotype
 
-    def create_relations_between_genotypes(self):
+class GenotypeRelationshipTool():
+
+    def create_relationships_between_genotypes_in_genealogy(self, genealogy):
         '''For all genotypes, add their related Genotype objects (children and
         parents)'''
-        for genotype in self.genotypes.values():
-            self.add_parent_objects_to_genotype(genotype)
+        for genotype in genealogy.genotypes.values():
+            self.add_parent_objects_to_genotype(genotype, genealogy)
             self.add_child_to_parent_genotype(genotype)
 
-    def add_parent_objects_to_genotype(self, genotype):
+    def add_parent_objects_to_genotype(self, genotype, genealogy):
         '''Genotype object initially created with just the parents' IDs.
         Replace them with the parents' Genotype objects'''
         for idx,parentID in enumerate(genotype.parents):
-            if parentID and self.has_genotype_id(parentID):
-                genotype.parents[idx] = self.genotypes[parentID]
+            if parentID and genealogy.has_genotype_id(parentID):
+                genotype.parents[idx] = genealogy.genotypes[parentID]
             else:
                 genotype.parents[idx] = None
 

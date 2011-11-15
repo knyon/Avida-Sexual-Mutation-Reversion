@@ -1,5 +1,5 @@
-from pedigree.genotype import Genotype
 from pedigree.genotype import *
+from pedigree.mutation import *
 import unittest
 
 
@@ -39,3 +39,10 @@ class Test_Genotype(unittest.TestCase):
         someGenotype = Genotype('3', '1', '2', None, None, 'Swp0-0', 'asdf')
         previousMutation = SubstitutionMutation("Mz0z")
         self.assertFalse(someGenotype.sequence_contains_mutation(previousMutation))
+
+    def test_reverting_mutation_in_sequence_retunrs_expected_result(self):
+        someGenotype = Genotype('3', '1', '2', 'Mx1a', None, 'Swp0-0', 'asdf')
+        someMutation = SubstitutionMutation("Mx0a")
+        revertedSequence = someGenotype.get_sequence_with_mutation_reverted(someMutation)
+        expectedSequence = "xsdf"
+        self.assertEquals(revertedSequence, expectedSequence)
