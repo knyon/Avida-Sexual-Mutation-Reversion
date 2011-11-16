@@ -4,35 +4,26 @@ import re
 
 class MutationEvaluator:
 
-    def __init__(self, pathToAvida):
+    def __init__(self, pathToAvida = (os.path.curdir + os.path.sep + "avida")):
         self.pathToAvida = pathToAvida
 
     def evaluate_effect_of_mutation(self, genotype, mutation):
-        genotypeFitness = get_fitness_of_sequence(genotype.sequence)
+        genotypeFitness = self.get_fitness_of_sequence(genotype.sequence)
         revertedSequence = genotype.get_sequence_with_mutation_reverted(mutation)
-        revertedFitness = get_fitness_of_sequence(revertedSequence)
+        revertedFitness = self.get_fitness_of_sequence(revertedSequence)
         if revertedFitness > genotypeFitness:
             return 1
         else:
             return -1
 
-    def evaluate_if_mutation_is(self, genotype, mutation):
-        genotypeFitness = get_fitness_of_sequence(genotype.sequence)
-        revertedSequence = genotype.get_sequence_with_mutation_reverted(mutation)
-        revertedFitness = get_fitness_of_sequence(revertedSequence)
-        if revertedFitness > genotypeFitness:
-            return False
-        else:
-            return True
+    def get_fitness_of_sequence(self, sequence):
+        self.write_sequence_to_avida_analyze_file(sequence)
+        self.run_avida_in_analyze_mode()
+        return self.get_fitness_from_analyze_output_file()
 
-    def get_fitness_of_sequence(self, sequence)
-        write_sequence_to_avida_analyze_file(sequence)
-        run_avida_in_analyze_mode()
-        return get_fitness_from_analyze_output_file()
-
-    def write_sequence_to_avida_analyze_file(self):
+    def write_sequence_to_avida_analyze_file(self, sequence):
         analyzeFilePath = self.pathToAvida + "analyze.cfg"
-        output = 'LOAD_SEQUENCE {0}\nRECALCULATE\nDETAIL fitness detail.txt'.format(sequence)
+        output = 'LOAD_SEQUENCE {0}\nRECALCULATE\nDETAIL detail.dat fitness'.format(sequence)
         if(os.path.exists(analyzeFilePath)):
             os.remove(analyzeFilePath)
         fp = open(analyzeFilePath, 'w')
@@ -48,7 +39,6 @@ class MutationEvaluator:
         fp = open(outputFilePath)
         analyzeOutputFile = fp.read()
         fp.close()
-        fitnessRegex = re.search(analyzeOutputFile, "(?=<Fitness:)\d+.?\d*")
+        fitnessRegex = re.search(analyzeOutputFile, "^\d+.?\d*")
         return float(fitnessRegex.group(0))
         
-
