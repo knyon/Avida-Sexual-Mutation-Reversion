@@ -9,10 +9,10 @@ if __name__ == '__main__':
         print("Nope")
         exit()
     fileName = sys.argv[1]
-    dominantGenotype = sys.argv[2]
-    genealogy = GenealogyMaker().make_genealogy_from_file(fileName, str(dominantGenotype))
+    dominantGenotype = str(sys.argv[2])
+    genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotype)
     print "Genologized!"
-    dominantLineage = Tracer(genealogy, TopDownTracePatter())
+    dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(dominantGenotype))
     print "Traced!"
     print(dominantLineage)
     #analyze_lineage(genealogy, dominantLineage)

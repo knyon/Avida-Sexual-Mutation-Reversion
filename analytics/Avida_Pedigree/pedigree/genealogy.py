@@ -33,21 +33,21 @@ class GenealogyMaker:
             c = q.get()
             if(c != None):
                 curr = genealogy.get_genome(c)
-                if (curr.isMarked() == False and curr.id() != "1"):
+                if (not curr.isMarked() and curr.ID != "1"):
                     parents = curr.parents
 
                     for rent in parents:
                         p = genealogy.get_genome(rent)
                         if (not p.isMarked()):
                             q.put(rent)
-                        p.add_child(curr.id())
+                        p.add_child(curr.ID)
                     
                     curr.mark()
                     width += 1
                 
                 ## cycle handeling -- should never every happen
                 else:
-                    if(curr.id() != "1"):
+                    if(curr.ID != "1"):
                         ##print "FML!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
                         fml += 1
 

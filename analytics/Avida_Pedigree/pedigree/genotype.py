@@ -1,6 +1,7 @@
 from pedigree.mutation import *
 import re
 
+
 class Genotype():
     ##'''Genotype object. Stores all information relating to a genotype.
     ##Used in tree transversal'''
@@ -10,13 +11,9 @@ class Genotype():
 
         self.ID = ID
         self.parents = (parentA_ID, parentB_ID)
-        #self.parentA = parentA_ID
-        #self.parentB = parentB_ID
-        #self.mut1 = self.parse_mutation_code(mutationCodeA) if mutationCodeA else None
-        #self.mut2 = self.parse_mutation_code(mutationCodeB) if mutationCodeB else None
-        self.mutations = (self.parse_mutation_code(mutationCodeA) if mutationCodeA else None , self.parse_mutation_code(mutationCodeB) if mutationCodeB else None)
-        #self.mutations.append(SubstitutionMutation(mutationCodeA) if mutationCodeA else None)
-        #self.mutations.append(SubstitutionMutation(mutationCodeB) if mutationCodeB else None)
+        self.mutations = (\
+                self.parse_mutation_code(mutationCodeA) if mutationCodeA else None,\
+                self.parse_mutation_code(mutationCodeB) if mutationCodeB else None)
         self.swapArea = self.parse_swap_code(swapCode) if swapCode else None
         self.sequence = sequence
         self.fitness = fit
@@ -60,10 +57,9 @@ class Genotype():
     def parse_swap_code(self, swapCode):
         regex= re.compile(r'Swp(\d+)-(\d+)')
         code = regex.match(swapCode)
-        Start = int(code.group(1))
-        End = int(code.group(2))
-
-        return (Start, End)
+        start = int(code.group(1))
+        end = int(code.group(2))
+        return (start, end)
 
     def parse_mutation_code(self, mutCode):
         regex= re.compile(r'M(\w)(\d+)(\w)')
@@ -71,11 +67,4 @@ class Genotype():
         mutFrom = code.group(1)
         mutAt = int(code.group(2))
         mutTo = code.group(3)
-
         return (mutFrom, mutAt, mutTo)
-
-    def id(self):
-        return self.ID
-
-    def parents(self):
-        return self.parents()

@@ -10,7 +10,7 @@ class Tracer:
 
     def make_trace(self, startGenotype):
         trace = []
-        queue = ExtndDeque(startGenotype)
+        queue = deque(startGenotype)
         while queue:
             baseNode = queue.popleft()
             relatedNodes = self.tracePattern.get_related_nodes(baseNode)
@@ -60,18 +60,5 @@ class MutRevTracePattern(TopDownTracePattern):
 
     def precondition_met(node):
         if node.sequence_contains_mutation(mutation)\
-        and evaluator.evaluate_effect_of_mutation(node, mutation) > 0:
+        and self.evaluator.evaluate_effect_of_mutation(node, mutation) > 0:
             return True
-
-
-class ExtndDeque(deque):
-    '''Extension of the deque collection that allows for appending multiple
-    items at once'''
-
-    def __init__(self, *items):
-        super(ExtndDeque, self).__init__(self)
-        self.append(*items)
-
-    def append(self, *items):
-        for i in items:
-            super(ExtndDeque, self).append(i)
