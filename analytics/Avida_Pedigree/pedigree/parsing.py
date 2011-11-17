@@ -25,12 +25,38 @@ class DetailParser():
             details = self.parse_detail_line(line) 
         return details
 
+    ## AWC -- 11/16/2011
+    ## Hack to try and speed things up
+    ## Construct a tulple witht he releveant genotype info
     def parse_detail_line(self, line):
-        matchedDetails = self.regex.match(line)
-        if matchedDetails:
-            return matchedDetails.groups()
-        else:
-            return None
+        details = re.split(" ", line)
+        parents = re.split(",",details[3])
+        mutations = re.split(",",details[14])
+        mutA = None
+        mutB = None
+        swp = None  ## for now, assuming 1 swp area
+
+        for mut in mutations:
+            if mut[0] == "S":
+                swp = mut
+            elif mut[0] == "M":
+                if (mutA != None):
+                    mutB = mut
+                else:
+                    mutA = mut
+
+        
+        sequence = details[17]
+        #gene_stuff = (details[0],parents[0],parents[1],mutA,mutB,swp,sequence)
+        #print gene_stuff
+        return (details[0],parents[0],parents[1],mutA,mutB,swp,sequence)
+
+##    def parse_detail_line(self, line):
+##        matchedDetails = self.regex.match(line)
+##        if matchedDetails:
+##            return matchedDetails.groups()
+##        else:
+##            return None
 
     def parse_genesis_detail_line(self, line):
         matchedDetails = self.genesisRegex.search(line)
