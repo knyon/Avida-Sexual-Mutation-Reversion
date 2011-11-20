@@ -10,11 +10,13 @@ class Tracer:
 
     def make_trace(self, startGenotype):
         trace = []
-        queue = deque(startGenotype)
+        queue = deque()
+        queue.append(startGenotype)
         while queue:
             baseNode = queue.popleft()
-            relatedNodes = self.tracePattern.get_related_nodes(baseNode)
-            for relatedNode in relatedNodes:
+            relatedNodeIDs = self.tracePattern.get_related_nodes(baseNode)
+            for nodeID in relatedNodeIDs:
+                relatedNode = self.genealogy.genotypes[nodeID]
                 if relatedNode and self.tracePattern.precondition_met(relatedNode):
                     trace.append((baseNode.ID, relatedNode.ID))
                     queue.append(relatedNode)
@@ -51,14 +53,3 @@ class SubMutBUTracePattern(BottomUpTracePattern):
 
     def precondition_met(self, node):
         return node.sequence_contains_mutation(self.trackedMutation)
-
-class MutRevTracePattern(TopDownTracePattern):
-    
-    def _init__(self, trackedMutation):
-        self.trackedMutation = trackedMutation
-        self.evaluator = MutationEvaluator()
-
-    def precondition_met(node):
-        if node.sequence_contains_mutation(mutation)\
-        and self.evaluator.evaluate_effect_of_mutation(node, mutation) > 0:
-            return True

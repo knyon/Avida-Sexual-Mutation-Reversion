@@ -46,8 +46,8 @@ class Genotype():
         return mutationCount
     
     def sequence_contains_mutation(self, subMut):
-        if subMut.mutationAt > len(self.sequence): return False
-        return self.sequence[subMut.mutationAt] == subMut.mutationTo
+        if subMut[1] > len(self.sequence): return False
+        return self.sequence[subMut[1]] == subMut[2]
 
     def get_sequence_with_mutation_reverted(self, subMut):
         revertedSequence = list(self.sequence)
