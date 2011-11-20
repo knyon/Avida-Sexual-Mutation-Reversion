@@ -51,7 +51,7 @@ class Genotype():
 
     def get_sequence_with_mutation_reverted(self, subMut):
         revertedSequence = list(self.sequence)
-        revertedSequence[subMut.mutationAt] = subMut.mutationFrom
+        revertedSequence[subMut[1]] = subMut[0]
         return ''.join(revertedSequence)
 
     def parse_swap_code(self, swapCode):
