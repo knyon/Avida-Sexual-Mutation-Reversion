@@ -30,6 +30,7 @@ def analyze_deleterious_mutation(genealogy, genotype, mutation):
                 print("\tParent ID: {}".format(parent.ID))
                 print("\tGenotype sequence: {}".format(offspring.sequence))
                 print("\tParent sequence: {}".format(parent.sequence))
+                print("\tMutation: {} to {} at {}".format(*mutation))
                 print("\tOffspring fitness: {}".format(offspring.fitness))
                 print("\tParent fitness: {}".format(parent.fitness))
                 return
