@@ -8,16 +8,16 @@ from pedigree.evaluator import *
 evaluator = MutationEvaluator()
 
 def analyze_lineage(genealogy, dominantLineage):
-    #evaluator = MutationEvaluator()
-    count = 0
     for parentID, offspringID in dominantLineage:
         parent = genealogy.genotypes[parentID]
         offspring = genealogy.genotypes[offspringID]
         if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
             for mutation in [m for m in offspring.mutations if m]:
-                analyze_deleterious_mutation(genealogy, offspring, mutation)
+                if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
+                    analyze_deleterious_mutation(genealogy, offspring, mutation)
 
 def analyze_deleterious_mutation(genealogy, genotype, mutation):
+    print("Recovery = Genotype where fitness reversal occured, Origin = Genotype that deleterious mutation originated")
     pattern = SubMutTDTracePattern(mutation)
     mutationTrace = Tracer(genealogy, pattern).make_trace(genotype)
     if mutationTrace:
@@ -25,15 +25,15 @@ def analyze_deleterious_mutation(genealogy, genotype, mutation):
             parent = genealogy.genotypes[parentID]
             offspring = genealogy.genotypes[offspringID]
             if offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
-                print("Sign epistatic occurance found:\n")
-                print("\tGenotype ID: {}".format(offspring.ID))
-                print("\tParent ID  : {}".format(parent.ID))
-                print("\tGenotype sequence: {}".format(offspring.sequence))
-                print("\tParent sequence  : {}".format(parent.sequence))
+                print("\nSign epistatic occurance found:\n")
+                print("\tRecovery ID: {}".format(offspring.ID))
+                print("\tOrigin ID  : {}".format(genotype.ID))
+                print("\tRecovery sequence: {}".format(offspring.sequence))
+                print("\tOrigin sequence  : {}".format(origin.sequence))
                 print("\tDeleterious mutation: {0} to {2} at {1}".format(*mutation))
                 for mutation in [m for m in offspring.mutations if m]:
-                    print("\tOffspring mutation : {0} to {2} at {1}".format(*mutation))
-                print("\tOffspring fitness: {}".format(offspring.fitness))
+                    print("\tRecovery mutation  : {0} to {2} at {1}".format(*mutation))
+                print("\tRecovery fitness: {}".format(offspring.fitness))
                 print("\tParent fitness   : {}".format(parent.fitness))
                 return
 
