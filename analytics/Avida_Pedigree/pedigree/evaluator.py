@@ -8,11 +8,9 @@ class MutationEvaluator:
         self.pathToAvida = pathToAvida
 
     def evaluate_effect_of_mutation(self, genotype, mutation):
-        genotypeFitness = self.get_fitness_of_sequence(genotype.sequence)
+        genotypeFitness = genotype.fitness
         revertedSequence = genotype.get_sequence_with_mutation_reverted(mutation)
         revertedFitness = self.get_fitness_of_sequence(revertedSequence)
-        print(genotypeFitness)
-        print(revertedFitness)
         if genotypeFitness > revertedFitness:
             return 1
         elif genotypeFitness == revertedFitness:

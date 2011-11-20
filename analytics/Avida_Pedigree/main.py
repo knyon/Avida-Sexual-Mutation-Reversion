@@ -27,10 +27,11 @@ def analyze_deleterious_mutation(genealogy, genotype, mutation):
             if evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
                 print("Sign epistatic occurance found:\n")
                 print("\tGenotype ID: {}".format(offspring.ID))
-                print("\tGenotype sequence: {}".format(offspring.sequence))
                 print("\tParent ID: {}".format(parent.ID))
-                print("\tParent fitness: {}".format(parent.fitness))
+                print("\tGenotype sequence: {}".format(offspring.sequence))
+                print("\tParent sequence: {}".format(parent.sequence))
                 print("\tOffspring fitness: {}".format(offspring.fitness))
+                print("\tParent fitness: {}".format(parent.fitness))
 
 
 if __name__ == '__main__':
