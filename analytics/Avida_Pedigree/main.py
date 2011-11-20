@@ -24,13 +24,15 @@ def analyze_deleterious_mutation(genealogy, genotype, mutation):
         for parentID, offspringID in mutationTrace:
             parent = genealogy.genotypes[parentID]
             offspring = genealogy.genotypes[offspringID]
-            if evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
+            if offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
                 print("Sign epistatic occurance found:\n")
                 print("\tGenotype ID: {}".format(offspring.ID))
                 print("\tParent ID: {}".format(parent.ID))
                 print("\tGenotype sequence: {}".format(offspring.sequence))
                 print("\tParent sequence: {}".format(parent.sequence))
-                print("\tMutation: {} to {} at {}".format(*mutation))
+                print("\tDeleterious mutation: {0} to {2} at {1}".format(*mutation))
+                for mutation in [m for m in offspring.mutations if m]:
+                    print("\tOffspring mutation: {0} to {2} at {1}".format(*mutation))
                 print("\tOffspring fitness: {}".format(offspring.fitness))
                 print("\tParent fitness: {}".format(parent.fitness))
                 return
