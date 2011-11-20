@@ -16,7 +16,7 @@ class Genotype():
                 self.parse_mutation_code(mutationCodeB) if mutationCodeB else None)
         self.swapArea = self.parse_swap_code(swapCode) if swapCode else None
         self.sequence = sequence
-        self.fitness = fit
+        self.fitness = float(fit)
         self.children = []
         self.marked = False
 

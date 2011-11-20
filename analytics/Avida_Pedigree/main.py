@@ -13,8 +13,8 @@ def analyze_lineage(genealogy, dominantLineage):
         offspring = genealogy.genotypes[offspringID]
         if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
             for mutation in [m for m in offspring.mutations if m]:
-                #if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
-                analyze_deleterious_mutation(genealogy, offspring, mutation)
+                if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
+                    analyze_deleterious_mutation(genealogy, offspring, mutation)
 
 def analyze_deleterious_mutation(genealogy, origin, mutation):
     pattern = SubMutTDTracePattern(mutation)
@@ -24,8 +24,8 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
             parent = genealogy.genotypes[parentID]
             offspring = genealogy.genotypes[offspringID]
             if offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
-                print("\nSign epistatic occurance found:\n")
-                print("Recovery = Genotype where fitness reversal occured, Origin = Genotype that deleterious mutation originated")
+                print("\nSign epistatic occurance found:")
+                print("Recovery = Genotype where fitness reversal occured\nOrigin = Genotype that deleterious mutation originated")
                 print("\tRecovery ID: {}".format(offspring.ID))
                 print("\tOrigin ID  : {}".format(origin.ID))
                 print("\tRecovery sequence: {}".format(offspring.sequence))
