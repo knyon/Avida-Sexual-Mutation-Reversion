@@ -6,6 +6,7 @@ from pedigree.tracer import *
 from pedigree.evaluator import *
 
 evaluator = MutationEvaluator()
+output = open("analysis.txt", 'w')
 
 def analyze_lineage(genealogy, dominantLineage):
     for parentID, offspringID in dominantLineage:
@@ -24,17 +25,18 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
             parent = genealogy.genotypes[parentID]
             offspring = genealogy.genotypes[offspringID]
             if offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
-                print("\nSign epistatic occurance found:")
-                print("Recovery = Genotype where fitness reversal occured\nOrigin = Genotype that deleterious mutation originated")
-                print("\tRecovery ID: {}".format(offspring.ID))
-                print("\tOrigin ID  : {}".format(origin.ID))
-                print("\tRecovery sequence: {}".format(offspring.sequence))
-                print("\tOrigin sequence  : {}".format(origin.sequence))
-                print("\tDeleterious mutation: {0} to {2} at {1}".format(*mutation))
+                output.write("\nSign epistatic occurance found:")
+                output.write("\tOrigin ID  : {}".format(origin.ID))
+                output.write("\tParent ID  : {}".format(parent.ID))
+                output.write("\tRecovery ID: {}".format(offspring.ID))
+                output.write("\tOrigin sequence  : {}".format(origin.sequence))
+                output.write("\tParent sequence  : {}".format(origin.sequence))
+                output.write("\tRecovery sequence: {}".format(offspring.sequence))
+                output.write("\tDeleterious mutation: {0} to {2} at {1}".format(*mutation))
                 for mutation in [m for m in offspring.mutations if m]:
-                    print("\tRecovery mutation  : {0} to {2} at {1}".format(*mutation))
-                print("\tRecovery fitness: {}".format(offspring.fitness))
-                print("\tParent fitness   : {}".format(parent.fitness))
+                    output.write("\tRecovery mutation  : {0} to {2} at {1}".format(*mutation))
+                output.write("\tParent fitness   : {}".format(parent.fitness))
+                output.write("\tRecovery fitness: {}".format(offspring.fitness))
                 return
 
 
@@ -51,3 +53,4 @@ if __name__ == '__main__':
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
     print "Traced!"
     analyze_lineage(genealogy, dominantLineage)
+    output.close()
