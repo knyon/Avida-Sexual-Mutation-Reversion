@@ -21,10 +21,12 @@ class Tracer:
                 relatedNode = self.genealogy.genotypes[nodeID]
                 if relatedNode and not relatedNode.isMarked() and self.tracePattern.precondition_met(relatedNode):
                     trace.append((baseNode.ID, relatedNode.ID))
+                    relatedNode.mark()
                     queue.append(relatedNode.ID)
             statusCount += 1
-            if statusCount % 100 == 0:
+            if statusCount % 1000 == 0:
                 print("I've gone {} times throught the queue".format(statusCount))
+                print("The queue has {} members".format(len(queue)))
         return set(trace)
 
 class TopDownTracePattern:
