@@ -7,9 +7,14 @@ from pedigree.evaluator import *
 
 evaluator = MutationEvaluator()
 output = open("analysis.txt", 'w')
+output.write("Analysis file:")
 
 def analyze_lineage(genealogy, dominantLineage):
+    edgeCount = 0
     for parentID, offspringID in dominantLineage:
+        statusCount += 1
+        if edgeCount % 50 == 0:
+            print("On edge {}".format(edgeCount))
         parent = genealogy.genotypes[parentID]
         offspring = genealogy.genotypes[offspringID]
         if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
@@ -52,5 +57,7 @@ if __name__ == '__main__':
     print "Genologized!"
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
     print "Traced!"
+    print("The trace has {} edges".format(len(dominantLineage)))
     analyze_lineage(genealogy, dominantLineage)
+    print("Finished!")
     output.close()

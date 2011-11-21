@@ -97,7 +97,7 @@ class GenealogyMaker:
 
         self.add_children_in_lineage(genealogy, dom_genome_ID)
 
-        raw_input("****If you can read this then good things have transpired!****")
+        #raw_input("****If you can read this then good things have transpired!****")
         
         return genealogy
 
