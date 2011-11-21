@@ -1,4 +1,6 @@
 #! /usr/bin/python
+#/home/ac43497/local/bin/python2.7
+
 import sys
 from pedigree.output import *
 from pedigree.genealogy import *
