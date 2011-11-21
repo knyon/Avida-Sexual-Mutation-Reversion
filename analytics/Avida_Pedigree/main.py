@@ -36,7 +36,7 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
                 output.write("\tParent ID  : {}\n".format(parent.ID))
                 output.write("\tRecovery ID: {}\n".format(offspring.ID))
                 output.write("\tOrigin sequence  : {}\n".format(origin.sequence))
-                output.write("\tParent sequence  : {}\n".format(origin.sequence))
+                output.write("\tParent sequence  : {}\n".format(parent.sequence))
                 output.write("\tRecovery sequence: {}\n".format(offspring.sequence))
                 output.write("\tDeleterious mutation: {0} to {2} at {1}\n".format(*mutation))
                 for mutation in [m for m in offspring.mutations if m]:
