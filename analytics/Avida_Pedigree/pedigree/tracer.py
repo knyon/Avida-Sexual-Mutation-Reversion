@@ -23,12 +23,12 @@ class Tracer:
                     trace.append((baseNode.ID, relatedNode.ID))
                     queue.append(relatedNode.ID)
                     relatedNode.mark()
-                    markedNodes.append[relatedNode.ID]
+                    markedNodes.append(relatedNode.ID)
             statusCount += 1
             if statusCount % 1000 == 0:
                 print("I've gone {} times throught the queue".format(statusCount))
                 print("The queue has {} members".format(len(queue)))
-        unmarkNodes(markedNodes)
+        self.unmarkNodes(markedNodes)
         return set(trace)
 
     def unmarkNodes(self, markedNodes):

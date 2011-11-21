@@ -108,6 +108,9 @@ class Genealogy():
     def __init__(self):
         self.genotypes = {}
 
+    def __getitem__(self, i):
+        return self.genotypes[i]
+
     def has_genotype_id(self, genotypeID):
         return genotypeID in self.genotypes.keys()
 
