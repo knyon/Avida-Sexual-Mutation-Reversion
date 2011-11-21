@@ -122,6 +122,11 @@ class Genealogy():
         #key = details[0]
         self.genotypes[details[0]] = Genotype(*details)
 
+    def unmark_all_genotypes(self):
+        for genotype in self.genotypes.values():
+            genotype.unmark()
+            
+
 ##class GenotypeRelationshipTool():
 
 ##    def create_relationships_between_genotypes_in_genealogy(self, genealogy):

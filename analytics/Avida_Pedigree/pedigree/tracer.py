@@ -9,6 +9,7 @@ class Tracer:
         self.tracePattern = tracePattern
 
     def make_trace(self, startGenotype):
+        self.genealogy.unmark_all_genotypes()
         statusCount = 0
         trace = []
         queue = deque()
@@ -18,7 +19,7 @@ class Tracer:
             relatedNodeIDs = self.tracePattern.get_related_nodes(baseNode)
             for nodeID in relatedNodeIDs:
                 relatedNode = self.genealogy.genotypes[nodeID]
-                if relatedNode and self.tracePattern.precondition_met(relatedNode):
+                if relatedNode and not relatedNode.isMarked() and self.tracePattern.precondition_met(relatedNode):
                     trace.append((baseNode.ID, relatedNode.ID))
                     queue.append(relatedNode.ID)
             statusCount += 1
