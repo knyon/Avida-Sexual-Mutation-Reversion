@@ -56,9 +56,9 @@ if __name__ == '__main__':
     dominantGenotype = genealogy.genotypes[dominantGenotypeID]
     genesisGenotype = genealogy.genotypes['1']
     print "Genologized!"
+    genealogy.unmark_all_genotypes()
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
     print "Traced!"
-    genealogy.unmark_all_genotypes()
     analyze_lineage(genealogy, dominantLineage)
     print("Finished!")
     output.close()

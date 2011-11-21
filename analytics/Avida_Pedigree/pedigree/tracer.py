@@ -11,6 +11,7 @@ class Tracer:
     def make_trace(self, startGenotype):
         statusCount = 0
         trace = []
+        markedNodes = []
         queue = deque()
         queue.append(startGenotype.ID)
         while queue:
@@ -18,14 +19,21 @@ class Tracer:
             relatedNodeIDs = self.tracePattern.get_related_nodes(baseNode)
             for nodeID in relatedNodeIDs:
                 relatedNode = self.genealogy.genotypes[nodeID]
-                if relatedNode and self.tracePattern.precondition_met(relatedNode):
+                if not relatedNode.isMarked() and self.tracePattern.precondition_met(relatedNode):
                     trace.append((baseNode.ID, relatedNode.ID))
                     queue.append(relatedNode.ID)
+                    relatedNode.mark()
+                    markedNodes.append[relatedNode.ID]
             statusCount += 1
             if statusCount % 1000 == 0:
                 print("I've gone {} times throught the queue".format(statusCount))
                 print("The queue has {} members".format(len(queue)))
+        unmarkNodes(markedNodes)
         return set(trace)
+
+    def unmarkNodes(self, markedNodes):
+        for node in markedNodes:
+            self.genealogy[node].unmark()
 
 class TopDownTracePattern:
     
@@ -33,11 +41,7 @@ class TopDownTracePattern:
         return baseNode.children
 
     def precondition_met(self, node):
-        if node.isMarked():
-            return False
-        else:
-            node.mark()
-            return True
+        return True
 
 class BottomUpTracePattern:
     
