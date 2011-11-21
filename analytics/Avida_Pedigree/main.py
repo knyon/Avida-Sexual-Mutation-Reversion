@@ -12,7 +12,7 @@ output.write("Analysis file:")
 def analyze_lineage(genealogy, dominantLineage):
     edgeCount = 0
     for parentID, offspringID in dominantLineage:
-        statusCount += 1
+        edgeCount += 1
         if edgeCount % 50 == 0:
             print("On edge {}".format(edgeCount))
         parent = genealogy.genotypes[parentID]
