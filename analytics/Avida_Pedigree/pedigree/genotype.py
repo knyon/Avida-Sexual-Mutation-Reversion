@@ -27,8 +27,8 @@ class Genotype():
     def mark(self):
         self.marked = True
 
-    def mark(self):
-        self.marked = True
+    def unmark(self):
+        self.marked = False
 
     def replace_parent_ids_with_objects(self, parentObjects):
         self.parents = parentObjects
