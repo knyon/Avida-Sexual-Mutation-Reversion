@@ -20,7 +20,6 @@ class Genotype():
         self.children = []
         self.marked = False
 
-
     def isMarked(self):
         return self.marked
 

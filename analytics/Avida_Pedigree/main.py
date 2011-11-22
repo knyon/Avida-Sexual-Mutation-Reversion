@@ -58,6 +58,9 @@ if __name__ == '__main__':
     dominantGenotype = genealogy[dominantGenotypeID]
     genesisGenotype = genealogy['1']
     print "Genologized!"
+    raw_input("Before pruning")
+    genealogy.prune_all_childless_genotypes()
+    raw_input("After pruning")
     genealogy.unmark_all_genotypes()
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
     print "Traced!"

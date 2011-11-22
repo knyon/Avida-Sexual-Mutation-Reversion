@@ -123,6 +123,12 @@ class Genealogy():
         for genotype in self.genotypes.values():
             genotype.unmark()
 
+    def prune_all_childless_genotypes(self):
+        for key, genotype in self.genotypes.items():
+            if not genotype.children:
+                del self.genotypes[key]
+
+
 
 ##class GenotypeRelationshipTool():
 
