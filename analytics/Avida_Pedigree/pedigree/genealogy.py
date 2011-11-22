@@ -32,12 +32,12 @@ class GenealogyMaker:
             ## meaty part of the BFS, get the genotype object and add its id to its parent's children
             c = q.get()
             if(c != None):
-                curr = genealogy.get_genome(c)
+                curr = genealogy[c]
                 if (not curr.isMarked() and curr.ID != "1"):
                     parents = curr.parents
 
                     for rent in parents:
-                        p = genealogy.get_genome(rent)
+                        p = genealogy[rent]
                         if (not p.isMarked()):
                             q.put(rent)
                         p.add_child(curr.ID)
