@@ -18,8 +18,8 @@ def analyze_lineage(genealogy, dominantLineage):
         edgeCount += 1
         if edgeCount % 50 == 0:
             print("On edge {} of {}".format(edgeCount, edgeTotal))
-        parent = genealogy.genotypes[parentID]
-        offspring = genealogy.genotypes[offspringID]
+        parent = genealogy[parentID]
+        offspring = genealogy[offspringID]
         if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
             for mutation in [m for m in offspring.mutations if m]:
                 if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
@@ -30,8 +30,8 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
     mutationTrace = Tracer(genealogy, pattern).make_trace(origin)
     if mutationTrace:
         for parentID, offspringID in mutationTrace:
-            parent = genealogy.genotypes[parentID]
-            offspring = genealogy.genotypes[offspringID]
+            parent = genealogy[parentID]
+            offspring = genealogy[offspringID]
             if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
                 output.write("\nSign epistatic occurance found:\n")
                 output.write("\tOrigin ID  : {}\n".format(origin.ID))
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     fileName = sys.argv[1]
     dominantGenotypeID = sys.argv[2]
     genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotypeID)
-    dominantGenotype = genealogy.genotypes[dominantGenotypeID]
-    genesisGenotype = genealogy.genotypes['1']
+    dominantGenotype = genealogy[dominantGenotypeID]
+    genesisGenotype = genealogy['1']
     print "Genologized!"
     genealogy.unmark_all_genotypes()
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)

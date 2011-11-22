@@ -15,10 +15,10 @@ class Tracer:
         queue = deque()
         queue.append(startGenotype.ID)
         while queue:
-            baseNode = self.genealogy.genotypes[queue.popleft()]
+            baseNode = self.genealogy[queue.popleft()]
             relatedNodeIDs = self.tracePattern.get_related_nodes(baseNode)
             for nodeID in relatedNodeIDs:
-                relatedNode = self.genealogy.genotypes[nodeID]
+                relatedNode = self.genealogy[nodeID]
                 if not relatedNode.isMarked() and self.tracePattern.precondition_met(relatedNode):
                     trace.append((baseNode.ID, relatedNode.ID))
                     queue.append(relatedNode.ID)

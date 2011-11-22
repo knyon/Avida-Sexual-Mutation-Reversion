@@ -16,7 +16,7 @@ class Test_TopDownTrace(unittest.TestCase):
         genealogy = genealogyMaker.make_genealogy_from_string(\
                 detailForSubMutTracing)
         tracer = Tracer(genealogy, TopDownTracePattern())
-        startGenotype = genealogy.genotypes['3']
+        startGenotype = genealogy['3']
         self.trace = tracer.make_trace(startGenotype)
 
     def test_trace_contains_descendants(self):
@@ -35,7 +35,7 @@ class Test_BottomUpTrace(unittest.TestCase):
         genealogy = genealogyMaker.make_genealogy_from_string(\
                 detailForSubMutTracing)
         tracer = Tracer(genealogy, BottomUpTracePattern())
-        startGenotype = genealogy.genotypes['3']
+        startGenotype = genealogy['3']
         self.trace = tracer.make_trace(startGenotype)
 
     def test_trace_contains_ancestors(self):
@@ -53,7 +53,7 @@ class Test_SubMutTDTrace(unittest.TestCase):
         genealogyMaker = GenealogyMaker()
         genealogy = genealogyMaker.make_genealogy_from_string(\
                 detailForSubMutTracing)
-        startGenotype = genealogy.genotypes['3']
+        startGenotype = genealogy['3']
         trackedMutation = startGenotype.mutations[0]
         pattern = SubMutTDTracePattern(trackedMutation)
         tracer = Tracer(genealogy, pattern)
@@ -71,8 +71,8 @@ class Test_SubMutBUTrace(unittest.TestCase):
         genealogyMaker = GenealogyMaker()
         genealogy = genealogyMaker.make_genealogy_from_string(\
                 detailForSubMutTracing)
-        startGenotype = genealogy.genotypes['4']
-        trackedMutation = genealogy.genotypes['3'].mutations[0]
+        startGenotype = genealogy['4']
+        trackedMutation = genealogy['3'].mutations[0]
         pattern = SubMutBUTracePattern(trackedMutation)
         tracer = Tracer(genealogy, pattern)
         self.trace = tracer.make_trace(startGenotype)

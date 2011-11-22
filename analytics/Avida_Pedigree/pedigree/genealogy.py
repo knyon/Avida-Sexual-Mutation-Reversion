@@ -114,12 +114,6 @@ class Genealogy():
     def has_genotype_id(self, genotypeID):
         return genotypeID in self.genotypes.keys()
 
-    def get_genome(self, genomeID):
-        if genomeID in self.genotypes:
-            return self.genotypes[genomeID]
-        else:
-            return None
-
     def add_genotype(self, details):
         '''Add new genotype to the genealogy'''
         #key = details[0]
@@ -128,7 +122,7 @@ class Genealogy():
     def unmark_all_genotypes(self):
         for genotype in self.genotypes.values():
             genotype.unmark()
-            
+
 
 ##class GenotypeRelationshipTool():
 
@@ -146,7 +140,7 @@ class Genealogy():
 ##        ##Replace them with the parents' Genotype objects'''
 ##        for idx,parentID in enumerate(genotype.parents):
 ##            if parentID and genealogy.has_genotype_id(parentID):
-##                genotype.parents[idx] = genealogy.genotypes[parentID]
+##                genotype.parents[idx] = genealogy[parentID]
 ##            else:
 ##                genotype.parents[idx] = None
 

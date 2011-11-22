@@ -65,7 +65,7 @@ class Test_GenotypeRelationTool_handles_missing_parent_genotypes(unittest.TestCa
             .make_genealogy_from_string(detailDumpWithMissingGenotypesEntry)
         GenotypeRelationshipTool()\
             .create_relationships_between_genotypes_in_genealogy(genealogy)
-        self.orphanGenotype = genealogy.genotypes['4']
+        self.orphanGenotype = genealogy['4']
 
     def test_missing_parents_are_none(self):
         for parent in self.orphanGenotype.parents:
