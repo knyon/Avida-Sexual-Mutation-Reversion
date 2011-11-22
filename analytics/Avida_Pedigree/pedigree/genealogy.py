@@ -119,15 +119,10 @@ class Genealogy():
         #key = details[0]
         self.genotypes[details[0]] = Genotype(*details)
 
-    def unmark_all_genotypes(self):
-        for genotype in self.genotypes.values():
-            genotype.unmark()
-
-    def prune_all_childless_genotypes(self):
+    def prune_all_non_lineage_genotypes(self):
         for key, genotype in self.genotypes.items():
-            if not genotype.children:
+            if not genotype.isMarked():
                 del self.genotypes[key]
-
 
 
 ##class GenotypeRelationshipTool():

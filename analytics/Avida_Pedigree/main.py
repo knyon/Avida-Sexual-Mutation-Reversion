@@ -6,6 +6,7 @@ from pedigree.output import *
 from pedigree.genealogy import *
 from pedigree.tracer import *
 from pedigree.evaluator import *
+import timeit
 
 evaluator = MutationEvaluator()
 output = open("analysis.txt", 'w')
@@ -55,13 +56,12 @@ if __name__ == '__main__':
     fileName = sys.argv[1]
     dominantGenotypeID = sys.argv[2]
     genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotypeID)
+    t = timeit.Timer(stmt="genealogy.prune_all_non_lineage_genotypes()")
+    print(t.timeit())
     dominantGenotype = genealogy[dominantGenotypeID]
     genesisGenotype = genealogy['1']
+    raw_input("hold")
     print "Genologized!"
-    raw_input("Before pruning")
-    genealogy.prune_all_childless_genotypes()
-    raw_input("After pruning")
-    genealogy.unmark_all_genotypes()
     dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
     print "Traced!"
     analyze_lineage(genealogy, dominantLineage)
