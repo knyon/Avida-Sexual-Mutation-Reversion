@@ -17,7 +17,7 @@ def analyze_lineage(genealogy, dominantLineage):
     queue.append(genealogy['1'])
     while queue:
         parent = queue.popleft()
-        for offspring in [genealogy[ID] for ID in parents.children]:
+        for offspring in [genealogy[ID] for ID in parent.children]:
             if not offspring.isMarked():
                 if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
                     for mutation in [m for m in offspring.mutations if m]:
@@ -31,7 +31,7 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
     queue.append(origin)
     while queue:
         parent = queue.popleft()
-        for offspring in [genealogy[ID] for ID in parents.children]:
+        for offspring in [genealogy[ID] for ID in parent.children]:
             if offspring.sequence_contains_mutation(mutation):
                 if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
                     output.write("\nSign epistatic occurance found:\n")
