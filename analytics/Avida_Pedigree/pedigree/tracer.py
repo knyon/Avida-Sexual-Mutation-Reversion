@@ -29,7 +29,7 @@ class Tracer:
                 print("I've gone {} times throught the queue".format(statusCount))
                 print("The queue has {} members".format(len(queue)))
         self.unmarkNodes(markedNodes)
-        return set(trace)
+        return trace
 
     def unmarkNodes(self, markedNodes):
         for node in markedNodes:

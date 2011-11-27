@@ -6,7 +6,7 @@ from pedigree.output import *
 from pedigree.genealogy import *
 from pedigree.tracer import *
 from pedigree.evaluator import *
-import timeit
+from collections import deque
 
 evaluator = MutationEvaluator()
 output = open("analysis.txt", 'w')
@@ -15,16 +15,16 @@ output.write("Analysis file:")
 def analyze_lineage(genealogy, dominantLineage):
     edgeTotal = len(dominantLineage)
     edgeCount = 0
-    for parentID, offspringID in dominantLineage:
-        edgeCount += 1
-        if edgeCount % 50 == 0:
-            print("On edge {} of {}".format(edgeCount, edgeTotal))
-        parent = genealogy[parentID]
-        offspring = genealogy[offspringID]
-        if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
-            for mutation in [m for m in offspring.mutations if m]:
-                if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
-                    analyze_deleterious_mutation(genealogy, offspring, mutation)
+    queue = deque()
+    queue.append(genealogy['1'])
+    while queue:
+        parent = queue.popleft()
+        for offspring in [genealogy[ID] for ID in parents.children]:
+            if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
+                for mutation in [m for m in offspring.mutations if m]:
+                    if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
+                        analyze_deleterious_mutation(genealogy, offspring, mutation)
+            queue.append(offspring)
 
 def analyze_deleterious_mutation(genealogy, origin, mutation):
     pattern = SubMutTDTracePattern(mutation)
@@ -44,6 +44,7 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
                 output.write("\tDeleterious mutation: {0} to {2} at {1}\n".format(*mutation))
                 for mutation in [m for m in offspring.mutations if m]:
                     output.write("\tRecovery mutation  : {0} to {2} at {1}\n".format(*mutation))
+                output.write("\tOrigin fitness   : {}\n".format(origin.fitness))
                 output.write("\tParent fitness   : {}\n".format(parent.fitness))
                 output.write("\tRecovery fitness: {}\n".format(offspring.fitness))
                 return
@@ -56,14 +57,11 @@ if __name__ == '__main__':
     fileName = sys.argv[1]
     dominantGenotypeID = sys.argv[2]
     genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotypeID)
-    t = timeit.Timer(stmt="genealogy.prune_all_non_lineage_genotypes()")
-    print(t.timeit())
-    dominantGenotype = genealogy[dominantGenotypeID]
-    genesisGenotype = genealogy['1']
-    raw_input("hold")
+    genealogy.prune_all_non_lineage_genotypes()
     print "Genologized!"
-    dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
-    print "Traced!"
-    analyze_lineage(genealogy, dominantLineage)
+    # No need to trace, because the pruned genealogy is the trace
+    #dominantLineage = Tracer(genealogy, TopDownTracePattern()).make_trace(genesisGenotype)
+    #print "Traced!"
+    analyze_lineage(genealogy)
     print("Finished!")
     output.close()

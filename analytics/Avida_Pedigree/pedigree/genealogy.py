@@ -54,7 +54,7 @@ class GenealogyMaker:
             ##Marker has found the end of a generation
             ##spit out some interesting stats about what we found
             elif (c == None ):
-                print "Pocessed generation {0:d} containing {1:d} members".format(generation, width)
+                print "Processed generation {0:d} containing {1:d} members".format(generation, width)
 
                 ## keep house
                 total += width
@@ -87,7 +87,7 @@ class GenealogyMaker:
                         try:
                             genealogy.add_genotype(details)
                         except:
-                            print "DOh!!!"
+                            print "Doh!!!"
                             print details
                             print detailDump[i]
                             genealogy.add_genotype(details)
@@ -97,8 +97,6 @@ class GenealogyMaker:
 
         self.add_children_in_lineage(genealogy, dom_genome_ID)
 
-        #raw_input("****If you can read this then good things have transpired!****")
-        
         return genealogy
 
 
@@ -121,7 +119,9 @@ class Genealogy():
 
     def prune_all_non_lineage_genotypes(self):
         for key, genotype in self.genotypes.items():
-            if not genotype.isMarked():
+            if genotype.isMarked() or key == '1':
+                genotype.unmark()
+            else:
                 del self.genotypes[key]
 
 
