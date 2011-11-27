@@ -12,7 +12,7 @@ evaluator = MutationEvaluator()
 output = open("analysis.txt", 'w')
 output.write("Analysis file:")
 
-def analyze_lineage(genealogy, dominantLineage):
+def analyze_lineage(genealogy):
     queue = deque()
     queue.append(genealogy['1'])
     while queue:
