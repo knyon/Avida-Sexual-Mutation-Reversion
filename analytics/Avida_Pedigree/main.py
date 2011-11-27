@@ -23,6 +23,7 @@ def analyze_lineage(genealogy, dominantLineage):
                     for mutation in [m for m in offspring.mutations if m]:
                         if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
                             analyze_deleterious_mutation(genealogy, offspring, mutation)
+                offspring.mark()
                 queue.append(offspring)
 
 def analyze_deleterious_mutation(genealogy, origin, mutation):
