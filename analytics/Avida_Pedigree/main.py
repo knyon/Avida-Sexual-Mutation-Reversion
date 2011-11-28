@@ -18,10 +18,8 @@ def analyze_lineage(genealogy):
     queue = deque()
     queue.append(genealogy['1'])
     while queue:
-        statusCount += 1
-        if statusCount % 100 == 0:
-            print("Processing genotype {} of {}".format(statusCount, genealogyLength))
         parent = queue.popleft()
+        print("Processing genotype {} which has {} children".format(parent.ID, len(parent.children)))
         for offspring in [genealogy[ID] for ID in parent.children]:
             if not offspring.isMarked():
                 if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
@@ -55,8 +53,6 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
                     return None
                 else: 
                     queue.append(offspring)
-
-
 
 
 if __name__ == '__main__':
