@@ -13,9 +13,14 @@ output = open("analysis.txt", 'w')
 output.write("Analysis file:")
 
 def analyze_lineage(genealogy):
+    genealogyLength = len(genealogy)
+    statusCount = 0
     queue = deque()
     queue.append(genealogy['1'])
     while queue:
+        statusCount += 1
+        if statusCount % 100 == 0:
+            print("Processing genotype {} of {}".format(statusCount, genealogyLength))
         parent = queue.popleft()
         for offspring in [genealogy[ID] for ID in parent.children]:
             if not offspring.isMarked():
