@@ -83,6 +83,7 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
                         return True
                     else: 
                         queue.append(offspring)
+            marker.mark(parent.ID)
     return False
 
 
