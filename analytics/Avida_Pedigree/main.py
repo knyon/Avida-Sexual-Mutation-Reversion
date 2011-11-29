@@ -36,21 +36,25 @@ output.write("Analysis file:")
 
 def analyze_lineage(genealogy):
     genealogyLength = len(genealogy)
+    print("Total length of genealogy to be analyzed: {}".format(genealogyLength))
     statusCount = 0
     queue = deque()
     queue.append(genealogy['1'])
     while queue:
         parent = queue.popleft()
-        print("Processing genotype {} which has {} children".format(parent.ID, len(parent.children)))
+        statusCount += 1
         for offspring in [genealogy[ID] for ID in parent.children]:
-            print("zorg")
             if not offspring.isMarked():
                 if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
                     for mutation in [m for m in offspring.mutations if m]:
                         if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
-                            if not analyze_deleterious_mutation(genealogy, offspring, mutation):
+                            if not analyze_deleterious_mutation(genealogy, offspring, mutation) and queue[-1].ID != offspring.ID:
                                 queue.append(offspring)
+                else:
+                    queue.append(offspring)
                 offspring.mark()
+        if statusCount % 100 == 0:                                                                                                                                                
+            print("On genotype {}".format(statusCount))
 
 def analyze_deleterious_mutation(genealogy, origin, mutation):
     marker = SearchMarker()
