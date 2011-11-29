@@ -52,4 +52,4 @@ class DetailParser():
     def parse_genesis_detail_line(self, line):
         matchedDetails = self.genesisRegex.search(line)
         sequence = matchedDetails.group(1)
-        return ('1', None, None, None, None, None, sequence)
+        return ('1', None, None, None, None, None, sequence, 0.248677)

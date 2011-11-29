@@ -16,7 +16,7 @@ class SearchMarker:
     def mark(self, genotypeID):
         self.markerMap[genotypeID] = True
 
-    def unmark(self, genotypeID )
+    def unmark(self, genotypeID):
         self.markerMap[genotypeID] = False
 
     def unmark_all(self):
@@ -43,11 +43,12 @@ def analyze_lineage(genealogy):
         parent = queue.popleft()
         print("Processing genotype {} which has {} children".format(parent.ID, len(parent.children)))
         for offspring in [genealogy[ID] for ID in parent.children]:
+            print("zorg")
             if not offspring.isMarked():
                 if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
                     for mutation in [m for m in offspring.mutations if m]:
                         if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
-                            if not analyze_deleterious_mutation(genealogy, offspring, mutation)
+                            if not analyze_deleterious_mutation(genealogy, offspring, mutation):
                                 queue.append(offspring)
                 offspring.mark()
 
