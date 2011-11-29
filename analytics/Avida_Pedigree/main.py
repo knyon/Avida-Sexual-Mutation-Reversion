@@ -45,7 +45,7 @@ def analyze_lineage(genealogy):
         statusCount += 1
         for offspring in [genealogy[ID] for ID in parent.children]:
             if not offspring.isMarked():
-                if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0:
+                if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0 and parent.fitness - offspring.fitness > parent.fitness*0.01:
                     for mutation in [m for m in offspring.mutations if m]:
                         if evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
                             if not analyze_deleterious_mutation(genealogy, offspring, mutation) and queue[-1].ID != offspring.ID:
@@ -65,7 +65,7 @@ def analyze_deleterious_mutation(genealogy, origin, mutation):
         if not marker.is_marked(parent.ID):
             for offspring in [genealogy[ID] for ID in parent.children]:
                 if offspring.sequence_contains_mutation(mutation):
-                    if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
+                    if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and offspring.fitness - parent.fitness > parent.fitness*0.01 and evaluator.evaluate_effect_of_mutation(offspring, mutation) > 0:
                         output.write("\nSign epistatic occurance found:\n")
                         output.write("\tOrigin ID  : {}\n".format(origin.ID))
                         output.write("\tParent ID  : {}\n".format(parent.ID))
