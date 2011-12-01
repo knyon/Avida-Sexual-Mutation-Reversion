@@ -11,12 +11,12 @@ class MutationEvaluator:
         genotypeFitness = genotype.fitness
         revertedSequence = genotype.get_sequence_with_mutation_reverted(mutation)
         revertedFitness = self.get_fitness_of_sequence(revertedSequence)
-        if genotypeFitness > revertedFitness:
+        if genotypeFitness - revertedFitness > 0.01 * genotypeFitness:
             return 1
-        elif genotypeFitness == revertedFitness:
-            return 0
-        else:
+        elif revertedFitness - genotypeFitness > 0.01 * genotypeFitness:
             return -1
+        else:
+            return 0
 
     def get_fitness_of_sequence(self, sequence):
         self.write_sequence_to_avida_analyze_file(sequence)
