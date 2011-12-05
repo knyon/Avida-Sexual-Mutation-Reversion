@@ -62,7 +62,9 @@ def analyze_lineage(genealogy):
                 offspring.mark()
         if statusCount % 100 == 0:                                                                                                                                                
             print("On item {} through the queue".format(statusCount))
-    summaryOutput.write("\nTotal Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}\nAverage increase in fitness with SE event: {}".format(delMutationCount, signEpistasisCount, averageFitnessIncreaseBin/signEpistasisCount))
+    summaryOutput.write("\nTotal Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}".format(delMutationCount, signEpistasisCount))
+    if signEpistasisCount > 0:
+        summaryOutput.write("\nAverage increase in fitness with SE event: {}".format(averageFitnessIncreaseBin/signEpistasisCount))
 
 def analyze_deleterious_mutation(genealogy, origin, delMutation):
     marker = SearchMarker()
@@ -98,7 +100,7 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation):
 
 def check_if_mutation_in_final_dominant(mutation, genotypeID, genealogy):
     finalDominant = genealogy[dominantGenotypeID]
-    if finalDominat.sequence_contains_mutation(mutation):
+    if finalDominant.sequence_contains_mutation(mutation):
         summaryOutput.write("Final dominant contains sign epistatic mutation {} that arose in genotype #{}\n".format(mutation, genotypeID))
 
 if __name__ == '__main__':
