@@ -106,8 +106,7 @@ if __name__ == '__main__':
         print("Nope")
         exit()
     fileName = sys.argv[1]
-    dsequence_contains_mutation(mutation):
-        summaryOutput.write()ominantGenotypeID = sys.argv[2]
+    dominantGenotypeID = sys.argv[2]
     genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotypeID)
     genealogy.prune_all_non_lineage_genotypes()
     print "Genologized!"
