@@ -99,9 +99,8 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation):
 def check_if_SE_mutations_in_final_dominant(delMutation, reversalMutation, genotypeID, genealogy):
     global dominantGenotypeID
     finalDominant = genealogy[dominantGenotypeID]
-    if finalDominant.sequence_contains_mutation(mutation):
-    if finalDominant.sequence_contains_mutation(mutation):
-        summaryOutput.write("Final dominant contains sign epistatic mutations{} and {}, and the reversal occured in genotype #{}\n".format(delMutation, reversalMutation, genotypeID))
+    if finalDominant.sequence_contains_mutation(delMutation) and finalDominant.sequence_contains_mutation(reversalMutation):
+        summaryOutput.write("Final dominant contains sign epistatic mutations {} and {}, and the reversal occured in genotype #{}\n".format(delMutation, reversalMutation, genotypeID))
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
