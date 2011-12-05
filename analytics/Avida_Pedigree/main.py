@@ -34,7 +34,6 @@ evaluator = MutationEvaluator()
 detailedOutput = open("analysis.txt", 'w')
 summaryOutput = open("summary.txt", 'w')
 detailedOutput.write("Analysis file:")
-dominantGenotypeID = '1'
 averageFitnessIncreaseBin = 0
 
 def analyze_lineage(genealogy):
@@ -62,7 +61,7 @@ def analyze_lineage(genealogy):
                 offspring.mark()
         if statusCount % 100 == 0:                                                                                                                                                
             print("On item {} through the queue".format(statusCount))
-    summaryOutput.write("\nTotal Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}".format(delMutationCount, signEpistasisCount))
+    summaryOutput.write("Total Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}".format(delMutationCount, signEpistasisCount))
     if signEpistasisCount > 0:
         summaryOutput.write("\nAverage increase in fitness with SE event: {}".format(averageFitnessIncreaseBin/signEpistasisCount))
 
@@ -86,28 +85,30 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation):
                         detailedOutput.write("\tDeleterious mutation: {0} to {2} at {1}\n".format(*delMutation))
                         for mutation in [m for m in offspring.mutations if m]:
                             detailedOutput.write("\tRecovery mutation  : {0} to {2} at {1}\n".format(*mutation))
-                            check_if_mutation_in_final_dominant(mutation, offspring.ID, genealogy)
+                            check_if_SE_mutations_in_final_dominant(delMutation, mutation, offspring.ID, genealogy)
                         detailedOutput.write("\tOrigin fitness   : {}\n".format(origin.fitness))
                         detailedOutput.write("\tParent fitness   : {}\n".format(parent.fitness))
                         detailedOutput.write("\tRecovery fitness: {}\n".format(offspring.fitness))
                         del marker
-                        averageFitnessIncreaseBin += offspring.fitness - parent.fitness
-                        return True
+                        return offspring.fitness - parent.fitness
                     else: 
                         queue.append(offspring)
             marker.mark(parent.ID)
     return False
 
-def check_if_mutation_in_final_dominant(mutation, genotypeID, genealogy):
+def check_if_SE_mutations_in_final_dominant(delMutation, reversalMutation, genotypeID, genealogy):
+    global dominantGenotypeID
     finalDominant = genealogy[dominantGenotypeID]
     if finalDominant.sequence_contains_mutation(mutation):
-        summaryOutput.write("Final dominant contains sign epistatic mutation {} that arose in genotype #{}\n".format(mutation, genotypeID))
+    if finalDominant.sequence_contains_mutation(mutation):
+        summaryOutput.write("Final dominant contains sign epistatic mutations{} and {}, and the reversal occured in genotype #{}\n".format(delMutation, reversalMutation, genotypeID))
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print("Nope")
         exit()
     fileName = sys.argv[1]
+    global dominantGenotypeID
     dominantGenotypeID = sys.argv[2]
     genealogy = GenealogyMaker().make_genealogy_from_file(fileName, dominantGenotypeID)
     genealogy.prune_all_non_lineage_genotypes()
