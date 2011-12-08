@@ -94,12 +94,12 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation):
             for offspring in [genealogy[ID] for ID in parent.children]:
                 if offspring.sequence_contains_mutation(delMutation):
                     if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and offspring.fitness - parent.fitness > parent.fitness*0.01 and evaluator.evaluate_effect_of_mutation(offspring, delMutation) > 0:
-                        analysisLine = '''{deleteriousMutation},{originID},{originFitness},{originSequence},\
+                        analysisLine = "{originID},{originFitness},{originSequence},{deleteriousMutation},\
                         {originParent1ID},{originParent1Fitness},{originParent1Sequence},\
                         {originParent2ID},{originParent2Fitness},{originParent2Sequence},\
                         {recoveryID},{recoveryFitness},{recoverySequence},{recoveryMutations},\
                         {recoveryParent1ID},{recoveryParent1Fitness},{recoveryParent1Sequence},\
-                        {recoveryParent2ID}, {recoveryParent2Fitness},{recoveryParent2Sequence}'''\
+                        {recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}"\
                         .format(deleteriousMutation=delMutation, originID=origin.ID, originFitness=origin.fitness, originSequence=origin.sequence,
                                 originParent1ID=genealogy[origin.parents[0]].ID, originParent1Fitness=genealogy[origin.parents[0]].fitness, originParent1Sequence=genealogy[origin.parents[0]].sequence,
                                 originParent2ID=genealogy[origin.parents[1]].ID, originParent2Fitness=genealogy[origin.parents[1]].fitness, originParent2Sequence=genealogy[origin.parents[1]].sequence,
