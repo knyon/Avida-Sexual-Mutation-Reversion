@@ -145,7 +145,7 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation, totalPhylogenet
                                        "{originParent2ID},{originParent2Fitness},{originParent2Sequence},"\
                                        "{recoveryID},{recoveryFitness},{recoverySequence},{recoveryMutations},"\
                                        "{recoveryParent1ID},{recoveryParent1Fitness},{recoveryParent1Sequence},"\
-                                       "{recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}"\
+                                       "{recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}\n"\
                         .format(phylogeneticDepth=phylogeneticDepth,totalPhylogeneticDepth=totalPhylogeneticDepth,inFinalDominant=inFinalDominant,distanceFromFinalDominant=distanceFromFinalDominant,
                                 deleteriousMutation=delMutation, originID=origin.ID, originFitness=origin.fitness, originSequence=origin.sequence,
                                 originParent1ID=genealogy[origin.parents[0]].ID, originParent1Fitness=genealogy[origin.parents[0]].fitness, originParent1Sequence=genealogy[origin.parents[0]].sequence,
