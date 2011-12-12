@@ -34,73 +34,116 @@ evaluator = MutationEvaluator()
 analysisOutput = open("analysis.txt", 'w')
 analysisOutputHeader = '''# Analysis of all sign epsistatic events that occurred in the lineage of the final dominant genotype
 # Values separated by commas, in order:
-# 1. Deleterious mutation
-# 2. Genotype ID of origin of deleterious mutation
-# 3. Origin fitness
-# 4. Origin sequence
-# 5. Parent 1 of origin ID
-# 6. Parent 1 of origin fitness
-# 7. Parent 1 of origin sequence
-# 8. Parent 2 of origin ID
-# 9. Parent 2 of origin fitness
-# 10. Parent 2 of origin sequence
-# 11. Genotype ID of recovery genotype
-# 12. Recovery fitness
-# 13. Recovery sequence
-# 14. All mutations in recovery genotype
-# 15. Parent 1 of recovery ID
-# 16. Parent 1 of recovery fitness
-# 17. Parent 1 of recovery sequence
-# 18. Parent 2 of recovery ID
-# 19. Parent 2 of recovery fitness
-# 20. Parent 2 of recovery sequence\n\n\n'''
+# 1. Total Phylogenetic Depth
+# 2. Phylogenetic Depth between origin and recovery
+# 3. Is the deleterious mutation in the final dominant sequence?
+# 4. Distance from recovery to final dominant if mutation is in sequence; else -1
+# 5. Deleterious mutation
+# 6. Genotype ID of origin of deleterious mutation
+# 7. Origin fitness
+# 8. Origin sequence
+# 9. Parent 1 of origin ID
+# 10. Parent 1 of origin fitness
+# 11. Parent 1 of origin sequence
+# 12. Parent 2 of origin ID
+# 13. Parent 2 of origin fitness
+# 14. Parent 2 of origin sequence
+# 15. Genotype ID of recovery genotype
+# 16. Recovery fitness
+# 17. Recovery sequence
+# 18. All mutations in recovery genotype
+# 19. Parent 1 of recovery ID
+# 20. Parent 1 of recovery fitness
+# 21. Parent 1 of recovery sequence
+# 22. Parent 2 of recovery ID
+# 23. Parent 2 of recovery fitness
+# 24. Parent 2 of recovery sequence\n\n\n'''
 analysisOutput.write(analysisOutputHeader)
 summaryOutput = open("summary.txt", 'w')
 
 def analyze_lineage(genealogy):
+    totalPhylogeneticDepth = 
     statusCount = 0
     signEpistasisCount = 0
     delMutationCount = 0
     queue = deque()
     queue.append(genealogy['1'])
+    queue.append(None)
     while queue:
         parent = queue.popleft()
-        statusCount += 1
-        for offspring in [genealogy[ID] for ID in parent.children]:
-            if not offspring.isMarked():
-                if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0 and parent.fitness - offspring.fitness > parent.fitness*0.01:
-                    for mutation in [m for m in offspring.mutations if m]:
-                        if mutation[0] != mutation[2] and evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
-                            delMutationCount += 1
-                            if analyze_deleterious_mutation(genealogy, offspring, mutation):
-                                signEpistasisCount += 1
-                                break
-                            if queue[-1].ID != offspring.ID:
-                                queue.append(offspring)
-                else:
-                    queue.append(offspring)
-                offspring.mark()
-        if statusCount % 100 == 0:                                                                                                                                                
-            print("On item {} through the queue".format(statusCount))
+        if parent is None: 
+            totalPhylogeneticDepth += 1
+            queue.append(None)
+        else:
+            statusCount += 1
+            for offspring in [genealogy[ID] for ID in parent.children]:
+                if not offspring.isMarked():
+                    if parent.fitness > offspring.fitness and offspring.num_sub_mutations() > 0 and parent.fitness - offspring.fitness > parent.fitness*0.01:
+                        for mutation in [m for m in offspring.mutations if m]:
+                            if mutation[0] != mutation[2] and evaluator.evaluate_effect_of_mutation(offspring, mutation) < 0:
+                                delMutationCount += 1
+                                if analyze_deleterious_mutation(genealogy, offspring, mutation, totalPhylogeneticDepth):
+                                    signEpistasisCount += 1
+                                    break
+                                if queue[-1].ID != offspring.ID:
+                                    queue.append(offspring)
+                    else:
+                        queue.append(offspring)
+                    offspring.mark()
+            if statusCount % 100 == 0:                                                                                                                                                
+                print("On item {} through the queue".format(statusCount))
     summaryOutput.write("Total Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}".format(delMutationCount, signEpistasisCount))
 
-def analyze_deleterious_mutation(genealogy, origin, delMutation):
+def deleterious_mutation_and_reversion_in_final_dominant(genealogy, recoveryGenotype, delMutation):
+    global dominantGenotypeID
+    marker = SearchMarker()
+    queue = deque()
+    queue.append(recoveryGenotype)
+    queue.append(None)
+    while queue:
+        parent = queue.popleft()
+        if parent is None:
+            queue.append(None)
+            distanceFromFinalDominant += 1
+        elif not marker.is_marked(parent.ID):
+            if parent.sequence_contains_mutation(delMutation):
+                if parent.ID = dominantGenotypeID:
+                    del marker, queue
+                    return 1, distanceFromFinalDominant
+                else:
+                    for offspring in [genealogy[ID] for ID in parent.children]:
+                        queue.append(offspring)
+            elif parent.ID = dominantGenotypeID:
+                del marker, queue
+                return 0, distanceFromFinalDominant
+            marker.mark(parent.ID)
+    return 0, -1
+
+def analyze_deleterious_mutation(genealogy, origin, delMutation, totalPhylogeneticDepth):
     marker = SearchMarker()
     queue = deque()
     queue.append(origin)
+    queue.append(None)
+    phylogeneticDepth = 0
     while queue:
         parent = queue.popleft()
-        if not marker.is_marked(parent.ID):
+        if parent is None:
+            queue.append(None)
+            phylogeneticDepth += 1
+        elif not marker.is_marked(parent.ID):
             for offspring in [genealogy[ID] for ID in parent.children]:
                 if offspring.sequence_contains_mutation(delMutation):
                     if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and offspring.fitness - parent.fitness > parent.fitness*0.01 and evaluator.evaluate_effect_of_mutation(offspring, delMutation) > 0:
-                        analysisLine = "{originID},{originFitness},{originSequence},{deleteriousMutation},\
-                        {originParent1ID},{originParent1Fitness},{originParent1Sequence},\
-                        {originParent2ID},{originParent2Fitness},{originParent2Sequence},\
-                        {recoveryID},{recoveryFitness},{recoverySequence},{recoveryMutations},\
-                        {recoveryParent1ID},{recoveryParent1Fitness},{recoveryParent1Sequence},\
-                        {recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}"\
-                        .format(deleteriousMutation=delMutation, originID=origin.ID, originFitness=origin.fitness, originSequence=origin.sequence,
+                        inFinalDominant, distanceFromFinalDominant= deleterious_mutation_and_reversion_in_final_dominant()
+                        analysisLine = "{phylogeneticDepth},{totalPhylogeneticDepth},{inFinalDominant}, {distanceFromFinalDominant}"\
+                                       "{originID},{originFitness},{originSequence},{deleteriousMutation},"\
+                                       "{originParent1ID},{originParent1Fitness},{originParent1Sequence},"\
+                                       "{originParent2ID},{originParent2Fitness},{originParent2Sequence},"\
+                                       "{recoveryID},{recoveryFitness},{recoverySequence},{recoveryMutations},"\
+                                       "{recoveryParent1ID},{recoveryParent1Fitness},{recoveryParent1Sequence},"\
+                                       "{recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}"\
+                        .format(phylogeneticDepth=phylogeneticDepth,totalPhylogeneticDepth=totalPhylogeneticDepth,inFinalDominant=inFinalDominant,distanceFromFinalDominant=distanceFromFinalDominant,
+                                deleteriousMutation=delMutation, originID=origin.ID, originFitness=origin.fitness, originSequence=origin.sequence,
                                 originParent1ID=genealogy[origin.parents[0]].ID, originParent1Fitness=genealogy[origin.parents[0]].fitness, originParent1Sequence=genealogy[origin.parents[0]].sequence,
                                 originParent2ID=genealogy[origin.parents[1]].ID, originParent2Fitness=genealogy[origin.parents[1]].fitness, originParent2Sequence=genealogy[origin.parents[1]].sequence,
                                 recoveryID=offspring.ID, recoveryFitness=offspring.fitness, recoverySequence=offspring.sequence, recoveryMutations=offspring.mutations,
@@ -108,18 +151,12 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation):
                                 recoveryParent2ID=genealogy[offspring.parents[1]].ID, recoveryParent2Fitness=genealogy[offspring.parents[1]].fitness, recoveryParent2Sequence=genealogy[offspring.parents[1]].sequence
                                 )
                         analysisOutput.write(analysisLine)
-                        del marker
+                        del marker, queue
                         return offspring.fitness - parent.fitness
                     else: 
                         queue.append(offspring)
             marker.mark(parent.ID)
     return False
-
-def check_if_SE_mutations_in_final_dominant(delMutation, reversalMutation, genotypeID, genealogy):
-    global dominantGenotypeID
-    finalDominant = genealogy[dominantGenotypeID]
-    if finalDominant.sequence_contains_mutation(delMutation) and finalDominant.sequence_contains_mutation(reversalMutation):
-        summaryOutput.write("Final dominant contains sign epistatic mutations {} and {}, and the reversal occured in genotype #{}\n".format(delMutation, reversalMutation, genotypeID))
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
