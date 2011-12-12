@@ -86,7 +86,7 @@ def analyze_lineage(genealogy):
                                 if analyze_deleterious_mutation(genealogy, offspring, mutation, totalPhylogeneticDepth):
                                     signEpistasisCount += 1
                                     break
-                                if queue[-1].ID != offspring.ID:
+                                if queue[-1] is not None and queue[-1].ID != offspring.ID:
                                     queue.append(offspring)
                     else:
                         queue.append(offspring)
