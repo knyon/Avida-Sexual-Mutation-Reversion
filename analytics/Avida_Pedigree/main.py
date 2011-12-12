@@ -34,24 +34,25 @@ evaluator = MutationEvaluator()
 analysisOutput = open("analysis.txt", 'w')
 analysisOutputHeader = '''# Analysis of all sign epsistatic events that occurred in the lineage of the final dominant genotype
 # Values separated by commas, in order:
+# 0. Phylogenetic Depth between origin and recovery
 # 1. Total Phylogenetic Depth
-# 2. Phylogenetic Depth between origin and recovery
-# 3. Is the deleterious mutation in the final dominant sequence?
-# 4. Distance from recovery to final dominant if mutation is in sequence; else -1
-# 5. Deleterious mutation
-# 6. Genotype ID of origin of deleterious mutation
-# 7. Origin fitness
-# 8. Origin sequence
-# 9. Parent 1 of origin ID
-# 10. Parent 1 of origin fitness
-# 11. Parent 1 of origin sequence
-# 12. Parent 2 of origin ID
-# 13. Parent 2 of origin fitness
-# 14. Parent 2 of origin sequence
-# 15. Genotype ID of recovery genotype
-# 16. Recovery fitness
-# 17. Recovery sequence
-# 18. All mutations in recovery genotype
+# 2. Is the deleterious mutation in the final dominant sequence?
+# 3. Distance from recovery to final dominant if mutation is in sequence; else -1
+# 4. Deleterious mutation
+# 5. Genotype ID of origin of deleterious mutation
+# 6. Origin fitness
+# 7. Origin sequence
+# 8. Parent 1 of origin ID
+# 9. Parent 1 of origin fitness
+# 10. Parent 1 of origin sequence
+# 11. Parent 2 of origin ID
+# 12. Parent 2 of origin fitness
+# 13. Parent 2 of origin sequence
+# 14. Genotype ID of recovery genotype
+# 15. Recovery fitness
+# 16. Recovery sequence
+# 17. Mutation 1 in recovery genotype
+# 18. Mutation 2 in recovery genotype OR 'None'
 # 19. Parent 1 of recovery ID
 # 20. Parent 1 of recovery fitness
 # 21. Parent 1 of recovery sequence
@@ -139,18 +140,18 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation, totalPhylogenet
                 if offspring.sequence_contains_mutation(delMutation):
                     if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and offspring.fitness - parent.fitness > parent.fitness*0.01 and evaluator.evaluate_effect_of_mutation(offspring, delMutation) > 0:
                         inFinalDominant, distanceFromFinalDominant= deleterious_mutation_in_final_dominant(genealogy, offspring, delMutation)
-                        analysisLine = "{phylogeneticDepth},{totalPhylogeneticDepth},{inFinalDominant}, {distanceFromFinalDominant},"\
-                                       "{deleteriousMutation},{originID},{originFitness},{originSequence},"\
-                                       "{originParent1ID},{originParent1Fitness},{originParent1Sequence},"\
-                                       "{originParent2ID},{originParent2Fitness},{originParent2Sequence},"\
-                                       "{recoveryID},{recoveryFitness},{recoverySequence},{recoveryMutations},"\
-                                       "{recoveryParent1ID},{recoveryParent1Fitness},{recoveryParent1Sequence},"\
-                                       "{recoveryParent2ID},{recoveryParent2Fitness},{recoveryParent2Sequence}\n"\
+                        analysisLine = "{phylogeneticDepth} {totalPhylogeneticDepth} {inFinalDominant} {distanceFromFinalDominant} "\
+                                       "{deleteriousMutation} {originID} {originFitness} {originSequence} "\
+                                       "{originParent1ID} {originParent1Fitness} {originParent1Sequence} "\
+                                       "{originParent2ID} {originParent2Fitness} {originParent2Sequence} "\
+                                       "{recoveryID} {recoveryFitness} {recoverySequence} {recoveryMutation1} {recoveryMutation2} "\
+                                       "{recoveryParent1ID} {recoveryParent1Fitness} {recoveryParent1Sequence} "\
+                                       "{recoveryParent2ID} {recoveryParent2Fitness} {recoveryParent2Sequence}\n"\
                         .format(phylogeneticDepth=phylogeneticDepth,totalPhylogeneticDepth=totalPhylogeneticDepth,inFinalDominant=inFinalDominant,distanceFromFinalDominant=distanceFromFinalDominant,
                                 deleteriousMutation=delMutation, originID=origin.ID, originFitness=origin.fitness, originSequence=origin.sequence,
                                 originParent1ID=genealogy[origin.parents[0]].ID, originParent1Fitness=genealogy[origin.parents[0]].fitness, originParent1Sequence=genealogy[origin.parents[0]].sequence,
                                 originParent2ID=genealogy[origin.parents[1]].ID, originParent2Fitness=genealogy[origin.parents[1]].fitness, originParent2Sequence=genealogy[origin.parents[1]].sequence,
-                                recoveryID=offspring.ID, recoveryFitness=offspring.fitness, recoverySequence=offspring.sequence, recoveryMutations=offspring.mutations,
+                                recoveryID=offspring.ID, recoveryFitness=offspring.fitness, recoverySequence=offspring.sequence, recoveryMutation1=offspring.mutations[0], recoveryMutation2.mutations[1],
                                 recoveryParent1ID=genealogy[offspring.parents[0]].ID, recoveryParent1Fitness=genealogy[offspring.parents[0]].fitness, recoveryParent1Sequence=genealogy[offspring.parents[0]].sequence,
                                 recoveryParent2ID=genealogy[offspring.parents[1]].ID, recoveryParent2Fitness=genealogy[offspring.parents[1]].fitness, recoveryParent2Sequence=genealogy[offspring.parents[1]].sequence
                                 )
