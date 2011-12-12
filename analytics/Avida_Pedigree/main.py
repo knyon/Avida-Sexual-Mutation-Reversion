@@ -62,7 +62,7 @@ analysisOutput.write(analysisOutputHeader)
 summaryOutput = open("summary.txt", 'w')
 
 def analyze_lineage(genealogy):
-    totalPhylogeneticDepth = 
+    totalPhylogeneticDepth = 0
     statusCount = 0
     signEpistasisCount = 0
     delMutationCount = 0
@@ -71,9 +71,10 @@ def analyze_lineage(genealogy):
     queue.append(None)
     while queue:
         parent = queue.popleft()
-        if parent is None: 
-            totalPhylogeneticDepth += 1
-            queue.append(None)
+        if parent is None:
+            if queue:
+                queue.append(None)
+                totalPhylogeneticDepth += 1
         else:
             statusCount += 1
             for offspring in [genealogy[ID] for ID in parent.children]:
@@ -90,11 +91,11 @@ def analyze_lineage(genealogy):
                     else:
                         queue.append(offspring)
                     offspring.mark()
-            if statusCount % 100 == 0:                                                                                                                                                
+            if statusCount % 5 == 0:                                                                                                                                                
                 print("On item {} through the queue".format(statusCount))
     summaryOutput.write("Total Deleterious Mutations: {}\nTotal Sign Epistatic Mutations: {}".format(delMutationCount, signEpistasisCount))
 
-def deleterious_mutation_and_reversion_in_final_dominant(genealogy, recoveryGenotype, delMutation):
+def deleterious_mutation_in_final_dominant(genealogy, recoveryGenotype, delMutation):
     global dominantGenotypeID
     marker = SearchMarker()
     queue = deque()
@@ -103,17 +104,18 @@ def deleterious_mutation_and_reversion_in_final_dominant(genealogy, recoveryGeno
     while queue:
         parent = queue.popleft()
         if parent is None:
-            queue.append(None)
-            distanceFromFinalDominant += 1
+            if queue:
+                queue.append(None)
+                distanceFromFinalDominant += 1
         elif not marker.is_marked(parent.ID):
             if parent.sequence_contains_mutation(delMutation):
-                if parent.ID = dominantGenotypeID:
+                if parent.ID == dominantGenotypeID:
                     del marker, queue
                     return 1, distanceFromFinalDominant
                 else:
                     for offspring in [genealogy[ID] for ID in parent.children]:
                         queue.append(offspring)
-            elif parent.ID = dominantGenotypeID:
+            elif parent.ID == dominantGenotypeID:
                 del marker, queue
                 return 0, distanceFromFinalDominant
             marker.mark(parent.ID)
@@ -128,13 +130,14 @@ def analyze_deleterious_mutation(genealogy, origin, delMutation, totalPhylogenet
     while queue:
         parent = queue.popleft()
         if parent is None:
-            queue.append(None)
-            phylogeneticDepth += 1
+            if queue:
+                queue.append(None)
+                phylogeneticDepth += 1
         elif not marker.is_marked(parent.ID):
             for offspring in [genealogy[ID] for ID in parent.children]:
                 if offspring.sequence_contains_mutation(delMutation):
                     if offspring.fitness > parent.fitness and offspring.num_sub_mutations() > 0 and offspring.fitness - parent.fitness > parent.fitness*0.01 and evaluator.evaluate_effect_of_mutation(offspring, delMutation) > 0:
-                        inFinalDominant, distanceFromFinalDominant= deleterious_mutation_and_reversion_in_final_dominant()
+                        inFinalDominant, distanceFromFinalDominant= deleterious_mutation_in_final_dominant()
                         analysisLine = "{phylogeneticDepth},{totalPhylogeneticDepth},{inFinalDominant}, {distanceFromFinalDominant}"\
                                        "{originID},{originFitness},{originSequence},{deleteriousMutation},"\
                                        "{originParent1ID},{originParent1Fitness},{originParent1Sequence},"\
