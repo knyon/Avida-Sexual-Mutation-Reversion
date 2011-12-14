@@ -33,7 +33,7 @@ class SearchMarker:
 evaluator = MutationEvaluator()
 analysisOutput = open("analysis.txt", 'w')
 analysisOutputHeader = '''# Analysis of all sign epsistatic events that occurred in the lineage of the final dominant genotype
-# Values separated by commas, in order:
+# Values separated by spaces, in order:
 # 0. Phylogenetic Depth between origin and recovery
 # 1. Total Phylogenetic Depth
 # 2. Is the deleterious mutation in the final dominant sequence?

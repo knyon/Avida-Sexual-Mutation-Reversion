@@ -1,0 +1,160 @@
+Abstract:
+
+    No known study has identified the specific mechanism of sign epistatic
+fitness reversal and its prevailing effect in a population that undergoes
+recombination. A significant amount of research has been conducted
+investigating sign epistasis and the role of deleterious mutations in asexual
+populations. This research has shown that deleterious mutations are critical in
+rapid transversal of valleys in the fitness landscape. This process involving
+deleterious mutations is generally described as a fitness reversal, where a
+deleterious mutation is compensated by a separate mutation. This reversal leads
+into sign epistasis when together the two mutations achieve a higher fitness
+than either would separately. Literature comparing sign epistasis between
+sexual and asexual populations suggests that sign epistasis occurs with both
+reproductive strategies, but that recombination leads to subtly different
+effects. On a generational scale, recombination seems to hinder the individual
+chance of fitness reversal, but when considered across a large population over
+time, recombination does not prevent escape to higher local fitness maxima.
+Furthermore, recombination has not shown to confer any particular advantage
+when compared to asexual reproduction.
+
+    These studies consider the fitness of the population as a whole, however,
+the entire population will not survive and reproduce under natural selection.
+The fittest (or dominant) genotypes will reproduce more successfully and will
+lead to a bias of those genes in future generations. Thus, the dominant
+genotypes drive the vehicle of evolution. I hope to extend previous research
+mentioned by investigating the mechanism of sign epistasis and its influence
+the evolution of the dominant genotype of an sexual population. In illustrating
+the step-by-step fitness reversal of deleterious mutations, I expect to
+demonstrate that recombination brings together sign epistatic mutations that
+produce a large gain in fitness. I hypothesize that recombination that fitness
+reversals is significantly involved in the lineage of the final dominant
+genotype, and therefore, provides a benefit in the evolution of sexually
+reproducing populations.
+
+Background:
+
+    The scientific literature selected for this paper were chosen based on
+their establishment and support of sign epistasis as a central conduit in
+navigating the fitness landscape. Each of the three papers highlights different
+variables that influence the outcome of sign epistasis. The first paper, by
+Matthew Cowperthwaite et al. (From Bad To Good), establish evidence that
+deleterious mutations are persistent enough and complementary mutations
+prevalent enough to allow for frequent fitness reversals. Daniel Weinreich et
+al. (Rapid Evolutionary Escape) describes how the disruptive effect of
+recombination on sign epistasis is inversely proportional to population size,
+and than for large population sizes, recombination does not seem to show any
+significant effect. Finally, research by Arjan de Visser et al. (Exploring the
+Effect of Sex) give indication that effectiveness of sign epistasis with
+recombination is dependent on the given fitness landscape. 
+
+    According to the evolution model of Strong Selection, Weak Mutation (SSWM),
+deleterious mutations introduced to a population are rapidly selected for and
+removed. Cowperthwaite et al. clearly demonstrate this is not the case and give
+evidence that deleterious mutations are not immediately removed from the
+population. At initial stages, they claim, both deleterious and beneficial
+mutations occur at similar rates. Since deleterious mutations are frequent and
+prevalent, it is more likely that a complementary mutation may occur before the
+genotype is selected out, producing a fitness reversal. Furthermore, they
+present evidence of a relationship between fitness and the number of
+deleterious mutations. As mutation rate increases, up to a point, the number of
+deleterious mutations and the mean fitness level both increase. This may
+suggest that a high number of deleterious mutations allows for frequent and
+highly beneficial fitness reversals. However, correlation is not causation; the
+authors lack evidence to verify this claim. The experimental process could not
+determine whether fitness was produced by by true sign epistatic fitness
+reversal. Furthermore, all epistatic effects can occur simultaneously, and
+there was no isolated analysis of each factor that can produce a fitness
+increase.
+
+    Research by Daniel Weinreich et al. provide excellent predictive models of
+fixation of deleterious and beneficial mutations in epistatic states, both for
+intermediate fixation stages (before a fitness reversal) and the total
+fixation. Based on their models and predictions, they find it unlikely that
+recombination provides a higher rate of local maxima traversal. However, they
+do admit that, in large populations, it is likely that recombination may be
+able to quickly bring about a fitness reversal if two genotypes, each with the
+sign epistatic allele, reproduce. This shows that, when compared to asexual
+reproduction, sexual reproduction approaches fitness valleys slower, but
+reaches fitness peaks quicker. This simultaneous fixation may other advantages,
+such as being able to reproduce with neighbor genotypes and provide whichever
+missing allele need to create a fitness reversal in the offspring. However,
+this paper did not investigate this possibility.
+
+    The paper authored by de Visser et al. provides a direct comparison between
+the role of sign epistasis in sexual and asexual reproduction. By constructing
+the fitness landscape of an actual asexual fungus and then using a clever
+simulation to use the same constraints and fitness landscape for a sexual
+population, the researchers were able to analogously compare the evolution of
+each population. They discovered that the adaptation of the sexual population
+was dependent on the topography of the fitness landscape. Similar to Weinreich
+et al., they also found evidence that sex can take very quick, large "jumps"
+across the fitness landscape when simultaneous fixation occurs, but it
+generally took sexual populations longer to reach the intermediate stages.
+However, as they admit in their discussion, they expected much more rapid
+evolution in sexually reproducing individuals, as in nature. There may be more
+evidence within the mechanics of evolution and sign epistasis which was not
+investigated.
+
+Proposal:
+
+    While the aforementioned studies studied the effects of sign epistasis on
+the population a whole, I desire to look at the specific mechanics of the
+process that lead to sign epistatic fitness reversals. This will provide me
+with insight out of reach for many of the studies, because it will allow me to
+follow the exact process of evolution, step-by-step, and to "play God" and see
+the effect of reversing any particular step. My experiment will be accomplished
+through the following generalized steps: 1) by using the digital evolution
+program Avida to produce many large data sets of evolved genotypes and all
+their intermediate steps; 2) by tracing the lineage of the final dominant
+genotype and testing to see the effect of deleterious mutations through time;
+and 3) by making statistical tests to determine whether recombination is
+involved significantly in the evolution of the final dominant genotype.
+
+    Avida does not provide the functionality to trace lineages through a sexual
+population, nor does it provide the ability to analyze the effect of
+deleterious mutations in a lineage. Thus, much of my effort has gone into
+writing custom software to analyze the large data sets produced by Avida. I
+began by constructing a data structure to represent the massive data produced
+by Avida. In a typical run of Avida with 100 thousand update cycles, well over
+120 million unique genotypes are written to output. This presented a huge
+challenge in terms of being able to efficiently store a representation of the
+data. By using a hash map, I was able to store all necessary data and access
+records in linear time, albeit with a large memory requirement. I then moved
+onto the task of selecting the lineage of any particular genome, both for a
+line of descent and line of ancestry. A lineage from line of descent provides
+me with all offspring, allowing me to trace that path of a deleterious mutation
+that arises in a genome and is passed on to offspring. The lineage selected
+from the line of ancestry provides the exclusion of all genomes that are not
+ancestors to the final dominant genotype. The combination of these two tracing
+methods will allow me to sequentially analyze paths of inherited deleterious
+mutations, starting from the final dominant genotype and working backwards. 
+
+    Currently, I am finishing up on writing software module that will test each
+genome to determine whether it has a deleterious mutation, whether that
+deleterious mutation is inherited in offspring, and whether that mutation ever
+changes sign. This process of testing the deleterious mutation in offspring
+will iterate through each generation until the mutation is lost through
+recombination, overwritten by another mutation, or compensated for by
+epistasis. In the most latter case, I will test whether the originally
+deleterious mutation is required for that level of fitness. I will write a
+module that will revert the mutation to its previous state and compare the
+fitness between the mutated and reverted genotypes. If this test shows that the
+deleterious mutation was required for that degree of fitness, I will then
+determine by which route (random mutation or cross-over) either the deleterious
+or complementary mutation was introduced. From this point, I should have all
+the tools I need to put together statistical methods to test my hypothesis that
+the fitness of the final dominant genotype was influenced by fitness reversals
+introduced by recombination. And it is at the beginning of this point that I
+desire to reach by the end of the semester.
+
+Sources: Cowperthwaite, M.C., J.J. Bull, L.A. Meyers. 2006. From bad to good:
+fitness reversals and the ascent of deleterious mutations. PLoS Comput Biol
+2(10):e141
+
+de Visser, J.A.G.M, S. Park, and J. Krug. 2009. Exploring the effect of sex on
+empirical fitness landscapes. The American Naturalist 174:S15-S30
+
+Weinrecih, D.M., and L. Choa. 2005. Rapid evolutionary escape by large
+populations from local fitness peaks is likely in nature. Evolution
+59(6):1175-1182
